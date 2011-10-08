@@ -1,0 +1,455 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4CD6F8C614410CD20056F111 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C514410CD20056F111 /* UIKit.framework */; };
+		4CD6F8C814410CD20056F111 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C714410CD20056F111 /* Foundation.framework */; };
+		4CD6F8CA14410CD20056F111 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C914410CD20056F111 /* CoreGraphics.framework */; };
+		4CD6F8D014410CD20056F111 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8CE14410CD20056F111 /* InfoPlist.strings */; };
+		4CD6F8D214410CD20056F111 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8D114410CD20056F111 /* main.m */; };
+		4CD6F8D614410CD20056F111 /* LKPopupMenuAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8D514410CD20056F111 /* LKPopupMenuAppDelegate.m */; };
+		4CD6F8D914410CD20056F111 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8D714410CD20056F111 /* MainWindow.xib */; };
+		4CD6F8DC14410CD20056F111 /* LKPopupMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8DB14410CD20056F111 /* LKPopupMenuViewController.m */; };
+		4CD6F8DF14410CD20056F111 /* LKPopupMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8DD14410CD20056F111 /* LKPopupMenuViewController.xib */; };
+		4CD6F8E714410CD20056F111 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8E614410CD20056F111 /* SenTestingKit.framework */; };
+		4CD6F8E814410CD20056F111 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C514410CD20056F111 /* UIKit.framework */; };
+		4CD6F8E914410CD20056F111 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C714410CD20056F111 /* Foundation.framework */; };
+		4CD6F8EA14410CD20056F111 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C914410CD20056F111 /* CoreGraphics.framework */; };
+		4CD6F8F214410CD30056F111 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F014410CD30056F111 /* InfoPlist.strings */; };
+		4CD6F8F414410CD30056F111 /* LKPopupMenuTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */; };
+		4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4CD6F8EB14410CD20056F111 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4CD6F8B814410CD10056F111 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4CD6F8C014410CD20056F111;
+			remoteInfo = LKPopupMenu;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4CD6F8C114410CD20056F111 /* LKPopupMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LKPopupMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CD6F8C514410CD20056F111 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4CD6F8C714410CD20056F111 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4CD6F8C914410CD20056F111 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4CD6F8CD14410CD20056F111 /* LKPopupMenu-Info.plist */ = {isa = PBXFileReference; path = "LKPopupMenu-Info.plist"; sourceTree = "<group>"; };
+		4CD6F8CF14410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4CD6F8D114410CD20056F111 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4CD6F8D314410CD20056F111 /* LKPopupMenu-Prefix.pch */ = {isa = PBXFileReference; path = "LKPopupMenu-Prefix.pch"; sourceTree = "<group>"; };
+		4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */ = {isa = PBXFileReference; path = LKPopupMenuAppDelegate.h; sourceTree = "<group>"; };
+		4CD6F8D514410CD20056F111 /* LKPopupMenuAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuAppDelegate.m; sourceTree = "<group>"; };
+		4CD6F8D814410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4CD6F8DA14410CD20056F111 /* LKPopupMenuViewController.h */ = {isa = PBXFileReference; path = LKPopupMenuViewController.h; sourceTree = "<group>"; };
+		4CD6F8DB14410CD20056F111 /* LKPopupMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuViewController.m; sourceTree = "<group>"; };
+		4CD6F8DE14410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/LKPopupMenuViewController.xib; sourceTree = "<group>"; };
+		4CD6F8E514410CD20056F111 /* LKPopupMenuTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LKPopupMenuTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CD6F8E614410CD20056F111 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		4CD6F8EF14410CD30056F111 /* LKPopupMenuTests-Info.plist */ = {isa = PBXFileReference; path = "LKPopupMenuTests-Info.plist"; sourceTree = "<group>"; };
+		4CD6F8F114410CD30056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuTests.h; sourceTree = "<group>"; };
+		4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4CD6F8BE14410CD20056F111 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8C614410CD20056F111 /* UIKit.framework in Frameworks */,
+				4CD6F8C814410CD20056F111 /* Foundation.framework in Frameworks */,
+				4CD6F8CA14410CD20056F111 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CD6F8E114410CD20056F111 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8E714410CD20056F111 /* SenTestingKit.framework in Frameworks */,
+				4CD6F8E814410CD20056F111 /* UIKit.framework in Frameworks */,
+				4CD6F8E914410CD20056F111 /* Foundation.framework in Frameworks */,
+				4CD6F8EA14410CD20056F111 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4CD6F8B614410CD10056F111 = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8CB14410CD20056F111 /* LKPopupMenu */,
+				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,
+				4CD6F8C414410CD20056F111 /* Frameworks */,
+				4CD6F8C214410CD20056F111 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4CD6F8C214410CD20056F111 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8C114410CD20056F111 /* LKPopupMenu.app */,
+				4CD6F8E514410CD20056F111 /* LKPopupMenuTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4CD6F8C414410CD20056F111 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8C514410CD20056F111 /* UIKit.framework */,
+				4CD6F8C714410CD20056F111 /* Foundation.framework */,
+				4CD6F8C914410CD20056F111 /* CoreGraphics.framework */,
+				4CD6F8E614410CD20056F111 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4CD6F8CB14410CD20056F111 /* LKPopupMenu */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */,
+				4CD6F8D514410CD20056F111 /* LKPopupMenuAppDelegate.m */,
+				4CD6F8D714410CD20056F111 /* MainWindow.xib */,
+				4CD6F8DA14410CD20056F111 /* LKPopupMenuViewController.h */,
+				4CD6F8DB14410CD20056F111 /* LKPopupMenuViewController.m */,
+				4CD6F8DD14410CD20056F111 /* LKPopupMenuViewController.xib */,
+				4CD6F8CC14410CD20056F111 /* Supporting Files */,
+			);
+			path = LKPopupMenu;
+			sourceTree = "<group>";
+		};
+		4CD6F8CC14410CD20056F111 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8CD14410CD20056F111 /* LKPopupMenu-Info.plist */,
+				4CD6F8CE14410CD20056F111 /* InfoPlist.strings */,
+				4CD6F8D114410CD20056F111 /* main.m */,
+				4CD6F8D314410CD20056F111 /* LKPopupMenu-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */,
+				4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */,
+				4CD6F8EE14410CD30056F111 /* Supporting Files */,
+			);
+			path = LKPopupMenuTests;
+			sourceTree = "<group>";
+		};
+		4CD6F8EE14410CD30056F111 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F8EF14410CD30056F111 /* LKPopupMenuTests-Info.plist */,
+				4CD6F8F014410CD30056F111 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4CD6F8C014410CD20056F111 /* LKPopupMenu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CD6F8F914410CD30056F111 /* Build configuration list for PBXNativeTarget "LKPopupMenu" */;
+			buildPhases = (
+				4CD6F8BD14410CD20056F111 /* Sources */,
+				4CD6F8BE14410CD20056F111 /* Frameworks */,
+				4CD6F8BF14410CD20056F111 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LKPopupMenu;
+			productName = LKPopupMenu;
+			productReference = 4CD6F8C114410CD20056F111 /* LKPopupMenu.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4CD6F8E414410CD20056F111 /* LKPopupMenuTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CD6F8FC14410CD30056F111 /* Build configuration list for PBXNativeTarget "LKPopupMenuTests" */;
+			buildPhases = (
+				4CD6F8E014410CD20056F111 /* Sources */,
+				4CD6F8E114410CD20056F111 /* Frameworks */,
+				4CD6F8E214410CD20056F111 /* Resources */,
+				4CD6F8E314410CD20056F111 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4CD6F8EC14410CD20056F111 /* PBXTargetDependency */,
+			);
+			name = LKPopupMenuTests;
+			productName = LKPopupMenuTests;
+			productReference = 4CD6F8E514410CD20056F111 /* LKPopupMenuTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4CD6F8B814410CD10056F111 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4CD6F8BB14410CD10056F111 /* Build configuration list for PBXProject "LKPopupMenu" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4CD6F8B614410CD10056F111;
+			productRefGroup = 4CD6F8C214410CD20056F111 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4CD6F8C014410CD20056F111 /* LKPopupMenu */,
+				4CD6F8E414410CD20056F111 /* LKPopupMenuTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4CD6F8BF14410CD20056F111 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8D014410CD20056F111 /* InfoPlist.strings in Resources */,
+				4CD6F8D914410CD20056F111 /* MainWindow.xib in Resources */,
+				4CD6F8DF14410CD20056F111 /* LKPopupMenuViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CD6F8E214410CD20056F111 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8F214410CD30056F111 /* InfoPlist.strings in Resources */,
+				4CD6F8F414410CD30056F111 /* LKPopupMenuTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4CD6F8E314410CD20056F111 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4CD6F8BD14410CD20056F111 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8D214410CD20056F111 /* main.m in Sources */,
+				4CD6F8D614410CD20056F111 /* LKPopupMenuAppDelegate.m in Sources */,
+				4CD6F8DC14410CD20056F111 /* LKPopupMenuViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CD6F8E014410CD20056F111 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4CD6F8EC14410CD20056F111 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4CD6F8C014410CD20056F111 /* LKPopupMenu */;
+			targetProxy = 4CD6F8EB14410CD20056F111 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4CD6F8CE14410CD20056F111 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CD6F8CF14410CD20056F111 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4CD6F8D714410CD20056F111 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CD6F8D814410CD20056F111 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		4CD6F8DD14410CD20056F111 /* LKPopupMenuViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CD6F8DE14410CD20056F111 /* en */,
+			);
+			name = LKPopupMenuViewController.xib;
+			sourceTree = "<group>";
+		};
+		4CD6F8F014410CD30056F111 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CD6F8F114410CD30056F111 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4CD6F8F714410CD30056F111 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4CD6F8F814410CD30056F111 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4CD6F8FA14410CD30056F111 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4CD6F8FB14410CD30056F111 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4CD6F8FD14410CD30056F111 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LKPopupMenu.app/LKPopupMenu";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				INFOPLIST_FILE = "LKPopupMenuTests/LKPopupMenuTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		4CD6F8FE14410CD30056F111 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LKPopupMenu.app/LKPopupMenu";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				INFOPLIST_FILE = "LKPopupMenuTests/LKPopupMenuTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4CD6F8BB14410CD10056F111 /* Build configuration list for PBXProject "LKPopupMenu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CD6F8F714410CD30056F111 /* Debug */,
+				4CD6F8F814410CD30056F111 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4CD6F8F914410CD30056F111 /* Build configuration list for PBXNativeTarget "LKPopupMenu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CD6F8FA14410CD30056F111 /* Debug */,
+				4CD6F8FB14410CD30056F111 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		4CD6F8FC14410CD30056F111 /* Build configuration list for PBXNativeTarget "LKPopupMenuTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CD6F8FD14410CD30056F111 /* Debug */,
+				4CD6F8FE14410CD30056F111 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4CD6F8B814410CD10056F111 /* Project object */;
+}
