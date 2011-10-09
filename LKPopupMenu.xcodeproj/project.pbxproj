@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CD6879E144137F90037B126 /* 01.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68793144137F90037B126 /* 01.JPG */; };
+		4CD6879F144137F90037B126 /* 02.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68794144137F90037B126 /* 02.JPG */; };
+		4CD687A0144137F90037B126 /* 03.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68795144137F90037B126 /* 03.JPG */; };
+		4CD687A1144137F90037B126 /* 04.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68796144137F90037B126 /* 04.JPG */; };
+		4CD687A2144137F90037B126 /* 05.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68797144137F90037B126 /* 05.JPG */; };
+		4CD687A3144137F90037B126 /* 06.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68798144137F90037B126 /* 06.JPG */; };
+		4CD687A4144137F90037B126 /* 07.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD68799144137F90037B126 /* 07.JPG */; };
+		4CD687A5144137F90037B126 /* 08.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6879A144137F90037B126 /* 08.JPG */; };
+		4CD687A6144137F90037B126 /* 09.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6879B144137F90037B126 /* 09.JPG */; };
+		4CD687A7144137F90037B126 /* 10.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6879C144137F90037B126 /* 10.JPG */; };
+		4CD687A8144137F90037B126 /* 11.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6879D144137F90037B126 /* 11.JPG */; };
 		4CD6F8C614410CD20056F111 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C514410CD20056F111 /* UIKit.framework */; };
 		4CD6F8C814410CD20056F111 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C714410CD20056F111 /* Foundation.framework */; };
 		4CD6F8CA14410CD20056F111 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD6F8C914410CD20056F111 /* CoreGraphics.framework */; };
@@ -23,6 +34,8 @@
 		4CD6F8F214410CD30056F111 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F014410CD30056F111 /* InfoPlist.strings */; };
 		4CD6F8F414410CD30056F111 /* LKPopupMenuTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */; };
 		4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */; };
+		4CD6F90214410D290056F111 /* LKPopupMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenu.m */; };
+		4CD6F90314410D290056F111 /* LKPopupMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenu.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,26 +49,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4CD68793144137F90037B126 /* 01.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 01.JPG; sourceTree = "<group>"; };
+		4CD68794144137F90037B126 /* 02.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 02.JPG; sourceTree = "<group>"; };
+		4CD68795144137F90037B126 /* 03.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 03.JPG; sourceTree = "<group>"; };
+		4CD68796144137F90037B126 /* 04.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 04.JPG; sourceTree = "<group>"; };
+		4CD68797144137F90037B126 /* 05.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 05.JPG; sourceTree = "<group>"; };
+		4CD68798144137F90037B126 /* 06.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 06.JPG; sourceTree = "<group>"; };
+		4CD68799144137F90037B126 /* 07.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 07.JPG; sourceTree = "<group>"; };
+		4CD6879A144137F90037B126 /* 08.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 08.JPG; sourceTree = "<group>"; };
+		4CD6879B144137F90037B126 /* 09.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 09.JPG; sourceTree = "<group>"; };
+		4CD6879C144137F90037B126 /* 10.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 10.JPG; sourceTree = "<group>"; };
+		4CD6879D144137F90037B126 /* 11.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11.JPG; sourceTree = "<group>"; };
 		4CD6F8C114410CD20056F111 /* LKPopupMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LKPopupMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CD6F8C514410CD20056F111 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4CD6F8C714410CD20056F111 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4CD6F8C914410CD20056F111 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		4CD6F8CD14410CD20056F111 /* LKPopupMenu-Info.plist */ = {isa = PBXFileReference; path = "LKPopupMenu-Info.plist"; sourceTree = "<group>"; };
+		4CD6F8CD14410CD20056F111 /* LKPopupMenu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LKPopupMenu-Info.plist"; sourceTree = "<group>"; };
 		4CD6F8CF14410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CD6F8D114410CD20056F111 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4CD6F8D314410CD20056F111 /* LKPopupMenu-Prefix.pch */ = {isa = PBXFileReference; path = "LKPopupMenu-Prefix.pch"; sourceTree = "<group>"; };
-		4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */ = {isa = PBXFileReference; path = LKPopupMenuAppDelegate.h; sourceTree = "<group>"; };
+		4CD6F8D314410CD20056F111 /* LKPopupMenu-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LKPopupMenu-Prefix.pch"; sourceTree = "<group>"; };
+		4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuAppDelegate.h; sourceTree = "<group>"; };
 		4CD6F8D514410CD20056F111 /* LKPopupMenuAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuAppDelegate.m; sourceTree = "<group>"; };
 		4CD6F8D814410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		4CD6F8DA14410CD20056F111 /* LKPopupMenuViewController.h */ = {isa = PBXFileReference; path = LKPopupMenuViewController.h; sourceTree = "<group>"; };
+		4CD6F8DA14410CD20056F111 /* LKPopupMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuViewController.h; sourceTree = "<group>"; };
 		4CD6F8DB14410CD20056F111 /* LKPopupMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuViewController.m; sourceTree = "<group>"; };
 		4CD6F8DE14410CD20056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/LKPopupMenuViewController.xib; sourceTree = "<group>"; };
 		4CD6F8E514410CD20056F111 /* LKPopupMenuTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LKPopupMenuTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CD6F8E614410CD20056F111 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		4CD6F8EF14410CD30056F111 /* LKPopupMenuTests-Info.plist */ = {isa = PBXFileReference; path = "LKPopupMenuTests-Info.plist"; sourceTree = "<group>"; };
+		4CD6F8EF14410CD30056F111 /* LKPopupMenuTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LKPopupMenuTests-Info.plist"; sourceTree = "<group>"; };
 		4CD6F8F114410CD30056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuTests.h; sourceTree = "<group>"; };
 		4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuTests.m; sourceTree = "<group>"; };
+		4CD6F90014410D290056F111 /* LKPopupMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKPopupMenu.h; sourceTree = "<group>"; };
+		4CD6F90114410D290056F111 /* LKPopupMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +112,8 @@
 		4CD6F8B614410CD10056F111 = {
 			isa = PBXGroup;
 			children = (
-				4CD6F8CB14410CD20056F111 /* LKPopupMenu */,
+				4CD6F8FF14410CF30056F111 /* LKPopupMenu */,
+				4CD6F8CB14410CD20056F111 /* Sample Application */,
 				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,
 				4CD6F8C414410CD20056F111 /* Frameworks */,
 				4CD6F8C214410CD20056F111 /* Products */,
@@ -113,7 +140,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4CD6F8CB14410CD20056F111 /* LKPopupMenu */ = {
+		4CD6F8CB14410CD20056F111 /* Sample Application */ = {
 			isa = PBXGroup;
 			children = (
 				4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */,
@@ -124,12 +151,24 @@
 				4CD6F8DD14410CD20056F111 /* LKPopupMenuViewController.xib */,
 				4CD6F8CC14410CD20056F111 /* Supporting Files */,
 			);
+			name = "Sample Application";
 			path = LKPopupMenu;
 			sourceTree = "<group>";
 		};
 		4CD6F8CC14410CD20056F111 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4CD68793144137F90037B126 /* 01.JPG */,
+				4CD68794144137F90037B126 /* 02.JPG */,
+				4CD68795144137F90037B126 /* 03.JPG */,
+				4CD68796144137F90037B126 /* 04.JPG */,
+				4CD68797144137F90037B126 /* 05.JPG */,
+				4CD68798144137F90037B126 /* 06.JPG */,
+				4CD68799144137F90037B126 /* 07.JPG */,
+				4CD6879A144137F90037B126 /* 08.JPG */,
+				4CD6879B144137F90037B126 /* 09.JPG */,
+				4CD6879C144137F90037B126 /* 10.JPG */,
+				4CD6879D144137F90037B126 /* 11.JPG */,
 				4CD6F8CD14410CD20056F111 /* LKPopupMenu-Info.plist */,
 				4CD6F8CE14410CD20056F111 /* InfoPlist.strings */,
 				4CD6F8D114410CD20056F111 /* main.m */,
@@ -155,6 +194,15 @@
 				4CD6F8F014410CD30056F111 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CD6F8FF14410CF30056F111 /* LKPopupMenu */ = {
+			isa = PBXGroup;
+			children = (
+				4CD6F90014410D290056F111 /* LKPopupMenu.h */,
+				4CD6F90114410D290056F111 /* LKPopupMenu.m */,
+			);
+			name = LKPopupMenu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +275,17 @@
 				4CD6F8D014410CD20056F111 /* InfoPlist.strings in Resources */,
 				4CD6F8D914410CD20056F111 /* MainWindow.xib in Resources */,
 				4CD6F8DF14410CD20056F111 /* LKPopupMenuViewController.xib in Resources */,
+				4CD6879E144137F90037B126 /* 01.JPG in Resources */,
+				4CD6879F144137F90037B126 /* 02.JPG in Resources */,
+				4CD687A0144137F90037B126 /* 03.JPG in Resources */,
+				4CD687A1144137F90037B126 /* 04.JPG in Resources */,
+				4CD687A2144137F90037B126 /* 05.JPG in Resources */,
+				4CD687A3144137F90037B126 /* 06.JPG in Resources */,
+				4CD687A4144137F90037B126 /* 07.JPG in Resources */,
+				4CD687A5144137F90037B126 /* 08.JPG in Resources */,
+				4CD687A6144137F90037B126 /* 09.JPG in Resources */,
+				4CD687A7144137F90037B126 /* 10.JPG in Resources */,
+				4CD687A8144137F90037B126 /* 11.JPG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +324,7 @@
 				4CD6F8D214410CD20056F111 /* main.m in Sources */,
 				4CD6F8D614410CD20056F111 /* LKPopupMenuAppDelegate.m in Sources */,
 				4CD6F8DC14410CD20056F111 /* LKPopupMenuViewController.m in Sources */,
+				4CD6F90214410D290056F111 /* LKPopupMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */,
+				4CD6F90314410D290056F111 /* LKPopupMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +501,7 @@
 				4CD6F8FB14410CD30056F111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CD6F8FC14410CD30056F111 /* Build configuration list for PBXNativeTarget "LKPopupMenuTests" */ = {
 			isa = XCConfigurationList;
@@ -448,6 +510,7 @@
 				4CD6F8FE14410CD30056F111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

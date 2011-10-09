@@ -8,6 +8,34 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LKPopupMenuViewController : UIViewController
+#import "LKPopupMenu.h"
+
+@interface LKPopupMenuViewController : UIViewController <LKPopupMenuDelegate> {
+    UIButton *popupButton;
+    UITextField *title;
+}
+
+@property (nonatomic, retain) NSArray* list;
+
+@property (nonatomic, retain) LKPopupMenu* popupMenu;
+@property (nonatomic, retain) LKPopupMenu* popupMenu2;
+@property (nonatomic, retain) IBOutlet UITextField *menuTitle;
+
+@property (nonatomic, assign) LKPopupMenuHeightSizeMode sizeMode;
+@property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
+@property (nonatomic, assign) BOOL shadowEnabled;
+@property (nonatomic, assign) BOOL whiteColor;
+
+@property (nonatomic, assign) LKPopupMenuSize menuSize;
+
+- (IBAction)popupToDown:(id)sender;
+- (IBAction)popupToRight:(id)sender;
+- (IBAction)popupToLeft:(id)sender;
+- (IBAction)popupToUp:(id)sender;
+- (IBAction)didChangeSizeMode:(id)sender;
+- (IBAction)didChangeSelectionMode:(id)sender;
+- (IBAction)didChangeShadowEnabled:(id)sender;
+- (IBAction)didChangeColor:(id)sender;
+- (IBAction)didChangeSize:(id)sender;
 
 @end
