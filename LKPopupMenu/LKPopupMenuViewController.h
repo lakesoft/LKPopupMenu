@@ -18,15 +18,17 @@
 @property (nonatomic, retain) NSArray* list;
 
 @property (nonatomic, retain) LKPopupMenu* popupMenu;
-@property (nonatomic, retain) LKPopupMenu* popupMenu2;
+@property (nonatomic, retain) LKPopupMenu* sizeMenu;
+@property (nonatomic, retain) LKPopupMenu* colorMenu;
 @property (nonatomic, retain) IBOutlet UITextField *menuTitle;
 
 @property (nonatomic, assign) LKPopupMenuHeightSizeMode sizeMode;
 @property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
 @property (nonatomic, assign) BOOL shadowEnabled;
-@property (nonatomic, assign) BOOL whiteColor;
+@property (nonatomic, assign) BOOL triangleEnabled;
 
 @property (nonatomic, assign) LKPopupMenuSize menuSize;
+@property (nonatomic, assign) LKPopupMenuColor menuColor;
 
 - (IBAction)popupToDown:(id)sender;
 - (IBAction)popupToRight:(id)sender;
@@ -37,5 +39,6 @@
 - (IBAction)didChangeShadowEnabled:(id)sender;
 - (IBAction)didChangeColor:(id)sender;
 - (IBAction)didChangeSize:(id)sender;
+- (IBAction)didChangeTriangle:(id)sender;
 
 @end

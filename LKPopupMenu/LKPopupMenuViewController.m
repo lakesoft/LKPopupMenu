@@ -11,14 +11,16 @@
 
 @implementation LKPopupMenuViewController
 @synthesize popupMenu = popupMenu_;
-@synthesize popupMenu2 = popupMenu2_;
+@synthesize sizeMenu = sizeMenu_;
+@synthesize colorMenu = colorMenu_;
 @synthesize menuTitle;
 @synthesize list;
 @synthesize sizeMode;
 @synthesize selectionMode;
 @synthesize shadowEnabled;
-@synthesize whiteColor;
+@synthesize triangleEnabled;
 @synthesize menuSize;
+@synthesize menuColor;
 
 - (void)didReceiveMemoryWarning
 {
@@ -43,11 +45,13 @@
     self.selectionMode = LKPopupMenuSelectionModeSingle;
     self.shadowEnabled = YES;
     self.menuSize = LKPopupMenuSizeMedium;
+    self.triangleEnabled = YES;
 }
 
 - (void)dealloc {
     self.popupMenu = nil;
-    self.popupMenu2 = nil;
+    self.sizeMenu = nil;
+    self.colorMenu = nil;
     [popupButton release];
     [title release];
     [super dealloc];
@@ -56,7 +60,8 @@
 {
     [super viewDidUnload];
     self.popupMenu = nil;
-    self.popupMenu2 = nil;
+    self.sizeMenu = nil;
+    self.colorMenu = nil;
     self.menuTitle = nil;
 }
 
@@ -70,7 +75,8 @@
 {
     if (self.popupMenu.shown) {
         [self.popupMenu hide];
-        [self.popupMenu2 hide];
+        [self.sizeMenu hide];
+        [self.colorMenu hide];
     }
     [self.menuTitle resignFirstResponder];
 }
@@ -90,8 +96,10 @@
 {
     NSLog(@"%s|index=%d, %@", __PRETTY_FUNCTION__, index, popupMenu.selectedIndexSet);
     
-    if (popupMenu == self.popupMenu2) {
+    if (popupMenu == self.sizeMenu) {
         self.menuSize = index;
+    } else if (popupMenu == self.colorMenu) {
+        self.menuColor = index;
     }
 }
 
@@ -114,18 +122,13 @@
         self.popupMenu.selectionMode = self.selectionMode;
         self.popupMenu.arrangementMode = arrangementMode;
         self.popupMenu.shadowEnabled = self.shadowEnabled;
-        self.popupMenu.menuSize = self.menuSize;
-        
-        if (self.whiteColor) {
-            self.popupMenu.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
-            self.popupMenu.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
-            self.popupMenu.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.95];
-            self.popupMenu.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
-            self.popupMenu.menuHilightedColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.85 alpha:0.75];
-        } else {
-            [self.popupMenu performSelector:@selector(_resetColors)];   // calling private selector
-        }
-        
+        self.popupMenu.triangleEnabled = self.triangleEnabled;
+        self.popupMenu.appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
+                                                                               color:self.menuColor];
+
+        // TODO
+//        self.popupMenu.appearance.tableSize = CGSizeMake(500, 500);;
+
         [self.popupMenu showAtLocation:location];
     }
 }
@@ -155,41 +158,51 @@
 }
 
 - (IBAction)didChangeColor:(id)sender {
-    UISwitch* sw = (UISwitch*)sender;
-    self.whiteColor = sw.on;
+    CGSize size = ((UIButton*)sender).frame.size;
+    CGPoint origin = ((UIButton*)sender).frame.origin;
+    CGPoint location = CGPointMake(origin.x + size.width/2.0,
+                                   origin.y - 2.0);
+    if (self.colorMenu.shown) {
+        [self.colorMenu hide];
+    } else {
+        if (self.colorMenu == nil) {
+            self.colorMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.colorMenu.list = [NSArray arrayWithObjects:
+                                  @"Default", @"Black", @"White", nil];
+            self.colorMenu.delegate = self;
+        }
+        self.colorMenu.title = @"Menu Color";
+        self.colorMenu.arrangementMode = LKPopupMenuArrangementModeUp;
+        self.colorMenu.triangleEnabled = YES;        
+        [self.colorMenu showAtLocation:location];
+    }
 }
 
 - (IBAction)didChangeSize:(id)sender {
     CGSize size = ((UIButton*)sender).frame.size;
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
-                                   origin.y + size.height + 2.0);
-    if (self.popupMenu2.shown) {
-        [self.popupMenu2 hide];
+                                   origin.y - 2.0);
+    if (self.sizeMenu.shown) {
+        [self.sizeMenu hide];
     } else {
-        if (self.popupMenu2 == nil) {
-            self.popupMenu2 = [LKPopupMenu popupMenuOnView:self.view];
-            self.popupMenu2.list = [NSArray arrayWithObjects:
+        if (self.sizeMenu == nil) {
+            self.sizeMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.sizeMenu.list = [NSArray arrayWithObjects:
                                     @"Small", @"Medium", @"Large", nil];
-            self.popupMenu2.delegate = self;
+            self.sizeMenu.delegate = self;
         }
-        self.popupMenu2.title = @"Menu Size";
-        self.popupMenu2.heightSizeMode = self.sizeMode;
-        self.popupMenu2.arrangementMode = LKPopupMenuArrangementModeUp;
-        self.popupMenu.menuSize = self.menuSize;
-        
-        if (self.whiteColor) {
-            self.popupMenu2.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.75];
-            self.popupMenu2.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
-            self.popupMenu2.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
-            self.popupMenu2.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
-            self.popupMenu2.menuHilightedColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.75 alpha:0.75];
-        } else {
-            [self.popupMenu2 performSelector:@selector(_resetColors)];   // calling private selector
-        }
-        
-        [self.popupMenu2 showAtLocation:location];
+        self.sizeMenu.title = @"Menu Size";
+        self.sizeMenu.arrangementMode = LKPopupMenuArrangementModeUp;
+        self.sizeMenu.triangleEnabled = YES;
+        [self.sizeMenu showAtLocation:location];
     }
+}
+
+- (IBAction)didChangeTriangle:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.triangleEnabled = sw.on;
+
 }
 
 - (IBAction)popupToDown:(id)sender {

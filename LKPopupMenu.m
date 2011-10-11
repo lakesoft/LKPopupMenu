@@ -9,52 +9,92 @@
 #import "LKPopupMenu.h"
 
 //------------------------------------------------------------------------------
-@interface LKPopupMenuSizeModel : NSObject
-@property (nonatomic, assign) CGFloat titleHeight;
-@property (nonatomic, assign) CGFloat cellHeight;
-@property (nonatomic, assign) CGFloat fontSize;
-@property (nonatomic, assign) CGSize defaultSize;
+@implementation LKPopupMenuAppearance
+//------------------------------------------------------------------------------
+// size
+@synthesize titleHeight;
+@synthesize cellHeight;
+@synthesize fontSize;
+@synthesize tableSize;
 
-+ (LKPopupMenuSizeModel*)modelForMenuSize:(LKPopupMenuSize)menuSize;
-@end
+// colors
+@synthesize menuBackgroundColor;
+@synthesize menuTextColor;
+@synthesize titleBackgroundColor;
+@synthesize titleTextColor;
+@synthesize menuHilightedColor;
 
-@implementation LKPopupMenuSizeModel
-@synthesize titleHeight, cellHeight, fontSize, defaultSize;
-
-static NSDictionary* models_ = nil;
-+ (LKPopupMenuSizeModel*)modelForMenuSize:(LKPopupMenuSize)menuSize
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    LKPopupMenuAppearance* appearance = [[[LKPopupMenuAppearance alloc] init] autorelease];
 
-        LKPopupMenuSizeModel* model = nil;
-        NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
-        
-        model = [[[LKPopupMenuSizeModel alloc] init] autorelease];
-        model.titleHeight = 25.0;
-        model.cellHeight = 30.0;
-        model.fontSize = 12.0;
-        model.defaultSize = CGSizeMake(120.0, 150.0);
-        [dict setObject:model forKey:[NSNumber numberWithInt:LKPopupMenuSizeSmall]];
-        
-        model = [[[LKPopupMenuSizeModel alloc] init] autorelease];
-        model.titleHeight = 30.0;
-        model.cellHeight = 35.0;
-        model.fontSize = 14.0;
-        model.defaultSize = CGSizeMake(160.0, 190.0);
-        [dict setObject:model forKey:[NSNumber numberWithInt:LKPopupMenuSizeMedium]];
-        
-        model = [[[LKPopupMenuSizeModel alloc] init] autorelease];
-        model.titleHeight = 35.0;
-        model.cellHeight = 40.0;
-        model.fontSize = 17.0;
-        model.defaultSize = CGSizeMake(200.0, 230.0);
-        [dict setObject:model forKey:[NSNumber numberWithInt:LKPopupMenuSizeLarge]];
-        
-        models_ = dict;
-    });
-    
-    return [models_ objectForKey:[NSNumber numberWithInt:menuSize]];
+    // setup sizes
+    switch (menuSize) {
+        case LKPopupMenuSizeSmall:
+            appearance.titleHeight = 25.0;
+            appearance.cellHeight = 30.0;
+            appearance.fontSize = 12.0;
+            appearance.tableSize = CGSizeMake(120.0, 150.0);
+            break;
+            
+        case LKPopupMenuSizeMedium:
+            appearance.titleHeight = 30.0;
+            appearance.cellHeight = 35.0;
+            appearance.fontSize = 14.0;
+            appearance.tableSize = CGSizeMake(160.0, 190.0);
+            break;
+            
+        case LKPopupMenuSizeLarge:
+            appearance.titleHeight = 35.0;
+            appearance.cellHeight = 40.0;
+            appearance.fontSize = 17.0;
+            appearance.tableSize = CGSizeMake(200.0, 230.0);
+            break;
+            
+        default:
+            break;
+    }
+
+    // setup colors
+    switch (menuColor) {
+        case LKPopupMenuColorDefault:
+        case LKPopupMenuColorBlack:
+            appearance.menuBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.65];
+            appearance.menuTextColor = [UIColor whiteColor];
+            appearance.menuHilightedColor = [UIColor colorWithWhite:0.5 alpha:0.5];    
+            appearance.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
+            appearance.titleTextColor = [UIColor whiteColor];
+            break;
+
+        case LKPopupMenuColorWhite:
+            appearance.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
+            appearance.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
+            appearance.menuHilightedColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.85 alpha:0.75];
+            appearance.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.95];
+            appearance.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
+            break;
+
+        default:
+            break;
+    }
+
+
+    return appearance;
+}
+
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize
+{
+    return [self defaultAppearanceWithSize:menuSize color:LKPopupMenuColorDefault];
+}
+
+- (void)dealloc
+{
+    self.menuBackgroundColor = nil;
+    self.menuTextColor = nil;
+    self.titleBackgroundColor = nil;
+    self.titleTextColor = nil;
+    self.menuHilightedColor = nil;
+    [super dealloc];
 }
             
 @end
@@ -71,10 +111,10 @@ static NSDictionary* models_ = nil;
 //------------------------------------------------------------------------------
 #define LK_POPUP_MENU_PADDING   2.0
 #define LK_POPUP_MENU_MARGIN    2.0
-#define LK_POPUP_MENU_PROJECTION_LONG          16.0
-#define LK_POPUP_MENU_PROJECTION_SHORT         10.0
+#define LK_POPUP_MENU_TRIANGLE_LONG          16.0
+#define LK_POPUP_MENU_TRIANGLE_SHORT         10.0
 
-#define LK_POPUP_MENU_SHADOW_OFFSET 5.0
+#define LK_POPUP_MENU_SHADOW_OFFSET 2.5
 
 @interface LKPopupMenuView : UIView
 @property (nonatomic, assign) CGPoint location;
@@ -82,6 +122,7 @@ static NSDictionary* models_ = nil;
 @property (nonatomic, assign) UITableView* tableView;
 @property (nonatomic, assign) CGRect tableFrame;
 @property (nonatomic, assign) CGFloat shadowOffset;
+@property (nonatomic, assign) CGSize triangleSize;
 @property (nonatomic, assign) CGFloat titleHeight;
 
 - (void)reloadData;
@@ -94,29 +135,36 @@ static NSDictionary* models_ = nil;
 @synthesize tableView = tableView_;
 @synthesize tableFrame = tableFrame_;
 @synthesize shadowOffset = shadowOffset_;
+@synthesize triangleSize = triangleSize_;
 @synthesize titleHeight = titleHeight_;
 
 - (id)initWithPopupMenu:(LKPopupMenu*)popupMenu Location:(CGPoint)location title:(NSString*)title
 {
-    LKPopupMenuSizeModel* sizeModel = [LKPopupMenuSizeModel modelForMenuSize:popupMenu.menuSize];
-    
     self.popupMenu = popupMenu;
     self.location = location;
+    LKPopupMenuAppearance* appearance = popupMenu.appearance;
+    
     self.shadowOffset = self.popupMenu.shadowEnabled ? LK_POPUP_MENU_SHADOW_OFFSET : 0;
+    if (self.popupMenu.triangleEnabled) {
+        self.triangleSize = CGSizeMake(LK_POPUP_MENU_TRIANGLE_LONG, LK_POPUP_MENU_TRIANGLE_SHORT);
+    } else {
+        self.triangleSize = CGSizeZero;
+    }
+
     if (title && [[title stringByTrimmingCharactersInSet:
                    [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
-        self.titleHeight = sizeModel.titleHeight;
+        self.titleHeight = appearance.titleHeight;
     } else {
         self.titleHeight = 0.0;
     }
 
     // setup list size
     CGFloat listWidth, listHeight;
-    listWidth = self.popupMenu.fixedWidth;
+    listWidth = appearance.tableSize.width;
     if (self.popupMenu.heightSizeMode == LKPopupMenuHeightSizeModeAuto) {
-        listHeight = sizeModel.cellHeight * [self.popupMenu.list count] + self.titleHeight;
+        listHeight = appearance.cellHeight * [self.popupMenu.list count] + self.titleHeight;
     } else {
-        listHeight = self.popupMenu.fixedHeight;
+        listHeight = appearance.tableSize.height;
     }
     
     // setup menu size
@@ -126,19 +174,19 @@ static NSDictionary* models_ = nil;
 
     switch (self.popupMenu.arrangementMode) {
         case LKPopupMenuArrangementModeUp:
-            menuHeight += LK_POPUP_MENU_PROJECTION_SHORT;
+            menuHeight += self.triangleSize.height;
             break;
             
         case LKPopupMenuArrangementModeDown:
-            menuHeight += LK_POPUP_MENU_PROJECTION_SHORT;
+            menuHeight += self.triangleSize.height;
             break;
             
         case LKPopupMenuArrangementModeRight:
-            menuWidth += LK_POPUP_MENU_PROJECTION_SHORT;
+            menuWidth += self.triangleSize.height;
             break;
             
         case LKPopupMenuArrangementModeLeft:
-            menuWidth += LK_POPUP_MENU_PROJECTION_SHORT;
+            menuWidth += self.triangleSize.height;
             break;
     }
 
@@ -194,9 +242,27 @@ static NSDictionary* models_ = nil;
         menuY += deltaY;
     }
     
-    
-    menuX = floor(menuX + 0.5);
-    menuY = floor(menuY + 0.5);
+    //TODO
+    switch (self.popupMenu.arrangementMode) {
+        case LKPopupMenuArrangementModeUp:
+            menuX = floor(menuX + 0.5);
+            menuY = floor(menuY + 0.5);
+            break;
+            
+        case LKPopupMenuArrangementModeDown:
+            menuX = floor(menuX + 0.5);
+            menuY = floor(menuY + 0.5);
+            break;
+            
+        case LKPopupMenuArrangementModeRight:
+            menuX = floor(menuX + 0.5);
+            menuY = floor(menuY + 0.5);
+            break;
+            
+        case LKPopupMenuArrangementModeLeft:
+            menuY = floor(menuY + 0.5);
+            break;
+    }
 
     CGRect frame = CGRectMake(menuX, menuY, menuWidth, menuHeight);
 
@@ -210,11 +276,11 @@ static NSDictionary* models_ = nil;
                 break;
                 
             case LKPopupMenuArrangementModeDown:
-                tableY += LK_POPUP_MENU_PROJECTION_SHORT;
+                tableY += self.triangleSize.height;
                 break;
                 
             case LKPopupMenuArrangementModeRight:
-                tableX += LK_POPUP_MENU_PROJECTION_SHORT;
+                tableX += self.triangleSize.height;
                 break;
                 
             case LKPopupMenuArrangementModeLeft:
@@ -239,10 +305,10 @@ static NSDictionary* models_ = nil;
             UILabel* titleLabel = [[[UILabel alloc] initWithFrame:
                                     CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
             titleLabel.adjustsFontSizeToFitWidth = YES;
-            titleLabel.font = [UIFont boldSystemFontOfSize:sizeModel.fontSize];
-            titleLabel.textColor = self.popupMenu.titleTextColor;
-            titleLabel.backgroundColor = self.popupMenu.titleBackgroundColor;   
-            titleLabel.minimumFontSize = sizeModel.fontSize;
+            titleLabel.font = [UIFont boldSystemFontOfSize:appearance.fontSize];
+            titleLabel.textColor = appearance.titleTextColor;
+            titleLabel.backgroundColor = appearance.titleBackgroundColor;   
+            titleLabel.minimumFontSize = appearance.fontSize;
             
             titleLabel.text = title;
             self.tableView.tableHeaderView = titleLabel;
@@ -273,7 +339,7 @@ static NSDictionary* models_ = nil;
     [self.tableView reloadData];
 }
 
-- (UIBezierPath*)_projectionBezierPath
+- (UIBezierPath*)_triangleBezierPath
 {
     UIBezierPath* path = [UIBezierPath bezierPath];
     CGPoint p = [self convertPoint:self.location fromView:self.superview];
@@ -282,38 +348,38 @@ static NSDictionary* models_ = nil;
         case LKPopupMenuArrangementModeUp:
             p.y -= self.shadowOffset;
             [path moveToPoint:p];
-            p.x -= LK_POPUP_MENU_PROJECTION_LONG/2.0;
-            p.y -= LK_POPUP_MENU_PROJECTION_SHORT + LK_POPUP_MENU_PADDING;
+            p.x -= self.triangleSize.width/2.0;
+            p.y -= self.triangleSize.height + LK_POPUP_MENU_PADDING;
             [path addLineToPoint:p];
-            p.x += LK_POPUP_MENU_PROJECTION_LONG;
+            p.x += self.triangleSize.width;
             [path addLineToPoint:p];
             break;
             
         case LKPopupMenuArrangementModeDown:
             [path moveToPoint:p];
-            p.x -= LK_POPUP_MENU_PROJECTION_LONG/2.0;
-            p.y += LK_POPUP_MENU_PROJECTION_SHORT + LK_POPUP_MENU_PADDING;
+            p.x -= self.triangleSize.width/2.0;
+            p.y += self.triangleSize.height + LK_POPUP_MENU_PADDING;
             [path addLineToPoint:p];
-            p.x += LK_POPUP_MENU_PROJECTION_LONG;
+            p.x += self.triangleSize.width;
             [path addLineToPoint:p];
             break;
             
         case LKPopupMenuArrangementModeRight:
             [path moveToPoint:p];
-            p.x += LK_POPUP_MENU_PROJECTION_SHORT + LK_POPUP_MENU_PADDING;
-            p.y -= LK_POPUP_MENU_PROJECTION_LONG/2.0;
+            p.x += self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.y -= self.triangleSize.width/2.0;
             [path addLineToPoint:p];
-            p.y += LK_POPUP_MENU_PROJECTION_LONG;
+            p.y += self.triangleSize.width;
             [path addLineToPoint:p];
             break;
             
         case LKPopupMenuArrangementModeLeft:
             p.x -= self.shadowOffset;
             [path moveToPoint:p];
-            p.x -= LK_POPUP_MENU_PROJECTION_SHORT + LK_POPUP_MENU_PADDING;
-            p.y -= LK_POPUP_MENU_PROJECTION_LONG/2.0;
+            p.x -= self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.y -= self.triangleSize.width/2.0;
             [path addLineToPoint:p];
-            p.y += LK_POPUP_MENU_PROJECTION_LONG;
+            p.y += self.triangleSize.width;
             [path addLineToPoint:p];
             break;
     }
@@ -325,26 +391,28 @@ static NSDictionary* models_ = nil;
 - (void)drawRect:(CGRect)rect
 {
     UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:self.tableFrame cornerRadius:5.0];
-    UIBezierPath* projectionPath = [self _projectionBezierPath];
+    UIBezierPath* trianglePath = [self _triangleBezierPath];
 
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.5] CGColor];
+    
+    if (self.popupMenu.triangleEnabled) {
+        if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown && self.titleHeight) {
+            [self.popupMenu.appearance.titleBackgroundColor setFill];
+            
+            CGContextSaveGState(context);
+            CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
+            [trianglePath fill];
+            CGContextRestoreGState(context);
 
-    if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown && self.titleHeight) {
-        [self.popupMenu.titleBackgroundColor setFill];
-        
-        CGContextSaveGState(context);
-        CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, [[UIColor colorWithWhite:0.0 alpha:1.0] CGColor]);
-        [projectionPath fill];
-        CGContextRestoreGState(context);
-
-    } else {
-        [path appendPath:projectionPath];
+        } else {
+            [path appendPath:trianglePath];
+        }
     }
 
-    [self.popupMenu.menuBackgroundColor setFill];
-
+    [self.popupMenu.appearance.menuBackgroundColor setFill];
     CGContextSaveGState(context);
-    CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, [[UIColor colorWithWhite:0.0 alpha:1.0] CGColor]);
+    CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
     [path fill];
     CGContextRestoreGState(context);
 
@@ -355,7 +423,7 @@ static NSDictionary* models_ = nil;
 
 //------------------------------------------------------------------------------
 @interface LKPopupMenuCell : UITableViewCell
-
+//------------------------------------------------------------------------------
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu;
 @property (nonatomic, assign) UIColor* hilightedColor;
 
@@ -370,14 +438,12 @@ static NSDictionary* models_ = nil;
     
     LKPopupMenuCell *cell = (LKPopupMenuCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        LKPopupMenuSizeModel* sizeModel = [LKPopupMenuSizeModel modelForMenuSize:popupMenu.menuSize];
-
         cell = [[[LKPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
-        cell.textLabel.font = [UIFont systemFontOfSize:sizeModel.fontSize];
-        cell.textLabel.textColor = popupMenu.menuTextColor;
+        cell.textLabel.font = [UIFont systemFontOfSize:popupMenu.appearance.fontSize];
+        cell.textLabel.textColor = popupMenu.appearance.menuTextColor;
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.hilightedColor = popupMenu.menuHilightedColor;
+        cell.hilightedColor = popupMenu.appearance.menuHilightedColor;
     }
     return cell;
 }
@@ -408,36 +474,20 @@ static NSDictionary* models_ = nil;
 @synthesize parentView = parentView_;
 @synthesize title = title_;
 @synthesize shown = shown_;
-@synthesize shadowEnabled = shadowEnabled_;
 
 @synthesize heightSizeMode = heightSizeMode_;
-@synthesize fixedWidth = fixedWidth_;
-@synthesize fixedHeight = fixedHeight_;
 
-@synthesize menuSize = menuSize_;
+@synthesize appearance = appearance_;
+@synthesize shadowEnabled = shadowEnabled_;
+@synthesize triangleEnabled = triangleEnabled_;
 
 @synthesize popupMenuView = popupMenuView_;
 
-// colors
-@synthesize menuBackgroundColor;
-@synthesize menuTextColor;
-@synthesize titleBackgroundColor;
-@synthesize titleTextColor;
-@synthesize menuHilightedColor;
 
 #pragma mark -
 #pragma mark Basics
 
-- (void)_resetColors
-{
-    self.menuBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.65];
-    self.menuTextColor = [UIColor whiteColor];
-    self.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
-    self.titleTextColor = [UIColor whiteColor];
-    self.menuHilightedColor = [UIColor colorWithWhite:0.5 alpha:0.5];    
-}
-
-- (id)initWithView:(UIView*)parentView
+- (id)initWithView:(UIView*)parentView appearance:(LKPopupMenuAppearance*)appearance
 {
     self = [super init];
     if (self) {
@@ -446,10 +496,10 @@ static NSDictionary* models_ = nil;
         self.selectionMode = LKPopupMenuSelectionModeSingle;
         self.arrangementMode = LKPopupMenuArrangementModeDown;
         self.shadowEnabled = YES;
+        self.triangleEnabled = YES;
         self.selectedIndexSet = [NSMutableSet set];
-        self.menuSize = LKPopupMenuSizeMedium;
 
-        [self _resetColors];
+        self.appearance = appearance;
     }
     return self;
 }
@@ -466,12 +516,8 @@ static NSDictionary* models_ = nil;
 
     self.selectedIndexSet = nil;
 
-    self.menuBackgroundColor = nil;
-    self.menuTextColor = nil;
-    self.titleBackgroundColor = nil;
-    self.titleTextColor = nil;
-    self.menuHilightedColor = nil;
-    
+    self.appearance = nil;
+
     [super dealloc];
 }
 
@@ -479,7 +525,14 @@ static NSDictionary* models_ = nil;
 #pragma mark API
 + (LKPopupMenu*)popupMenuOnView:(UIView*)parentView
 {
-    return [[[self alloc] initWithView:parentView] autorelease];
+    return [[[self alloc] initWithView:parentView
+                            appearance:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuSizeMedium]] autorelease];
+}
+
++ (LKPopupMenu*)popupMenuOnView:(UIView*)parentView appearacne:(LKPopupMenuAppearance*)appearance
+{
+    return [[[self alloc] initWithView:parentView
+                            appearance:appearance] autorelease];
 }
 
 - (void)showAtLocation:(CGPoint)location
@@ -529,14 +582,6 @@ static NSDictionary* models_ = nil;
     return (self.popupMenuView.alpha);
 }
 
-- (void)setMenuSize:(LKPopupMenuSize)menuSize
-{
-    menuSize_ = menuSize;
-
-    LKPopupMenuSizeModel* sizeModel = [LKPopupMenuSizeModel modelForMenuSize:self.menuSize];
-    self.fixedWidth = sizeModel.defaultSize.width;
-    self.fixedHeight = sizeModel.defaultSize.height;
-}
 
 #pragma mark -
 #pragma mark UITableViewDataSource
@@ -559,9 +604,9 @@ static NSDictionary* models_ = nil;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LKPopupMenuSizeModel* sizeModel = [LKPopupMenuSizeModel modelForMenuSize:self.menuSize];
-    return sizeModel.cellHeight;
+    return self.appearance.cellHeight;
 }
+
 
 #pragma mark -
 #pragma mark UITableViewDelegate

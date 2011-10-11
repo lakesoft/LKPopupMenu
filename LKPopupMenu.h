@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+//------------------------------------------------------------------------------
+// Constants
+//------------------------------------------------------------------------------
 typedef enum {
     LKPopupMenuSelectionModeSingle = 0,
     LKPopupMenuSelectionModeMultiple
@@ -32,8 +35,17 @@ typedef enum {
     LKPopupMenuSizeLarge
 } LKPopupMenuSize;
 
+typedef enum {
+    LKPopupMenuColorDefault = 0,
+    LKPopupMenuColorBlack,
+    LKPopupMenuColorWhite
+} LKPopupMenuColor;
+
+
 @class LKPopupMenu;
+//------------------------------------------------------------------------------
 @protocol LKPopupMenuDelegate <NSObject>
+//------------------------------------------------------------------------------
 @optional
 - (void)willAppearPopupMenu:(LKPopupMenu*)popupMenu;
 - (void)willDisappearPopupMenu:(LKPopupMenu*)popupMenu;
@@ -41,9 +53,31 @@ typedef enum {
 
 @end
 
+//------------------------------------------------------------------------------
+@interface LKPopupMenuAppearance : NSObject
+//------------------------------------------------------------------------------
+// color
+@property (nonatomic, retain) UIColor* menuBackgroundColor;
+@property (nonatomic, retain) UIColor* menuTextColor;
+@property (nonatomic, retain) UIColor* menuHilightedColor;
+@property (nonatomic, retain) UIColor* titleBackgroundColor;
+@property (nonatomic, retain) UIColor* titleTextColor;
 
+// size
+@property (nonatomic, assign) CGFloat titleHeight;
+@property (nonatomic, assign) CGFloat cellHeight;
+@property (nonatomic, assign) CGFloat fontSize;
+@property (nonatomic, assign) CGSize tableSize;
+
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize;
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor;
+
+@end
+
+
+//------------------------------------------------------------------------------
 @interface LKPopupMenu : NSObject
-
+//------------------------------------------------------------------------------
 // Properties (data)
 @property (nonatomic, retain) NSArray* list;
 @property (nonatomic, retain) NSMutableSet* selectedIndexSet;
@@ -56,24 +90,20 @@ typedef enum {
 @property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
 @property (nonatomic, assign) LKPopupMenuArrangementMode arrangementMode;
 @property (nonatomic, assign) LKPopupMenuHeightSizeMode heightSizeMode;
-@property (nonatomic, assign) CGFloat fixedWidth;
-@property (nonatomic, assign) CGFloat fixedHeight;
-@property (nonatomic, assign) BOOL shadowEnabled;
-@property (nonatomic, assign) LKPopupMenuSize menuSize;
 
 // Properties (info)
 @property (nonatomic, assign, readonly) UIView* parentView;
 @property (nonatomic, assign, readonly) BOOL shown;
 
-// Properties (colors)
-@property (nonatomic, retain) UIColor* menuBackgroundColor;
-@property (nonatomic, retain) UIColor* menuTextColor;
-@property (nonatomic, retain) UIColor* titleBackgroundColor;
-@property (nonatomic, retain) UIColor* titleTextColor;
-@property (nonatomic, retain) UIColor* menuHilightedColor;
+// Appearances
+@property (nonatomic, retain) LKPopupMenuAppearance* appearance;
+@property (nonatomic, assign) BOOL shadowEnabled;
+@property (nonatomic, assign) BOOL triangleEnabled;
 
 // API
 + (LKPopupMenu*)popupMenuOnView:(UIView*)parentView;
++ (LKPopupMenu*)popupMenuOnView:(UIView*)parentView appearacne:(LKPopupMenuAppearance*)appearance;
+
 - (void)showAtLocation:(CGPoint)location;
 - (void)hide;
 
