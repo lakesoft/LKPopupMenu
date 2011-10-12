@@ -23,6 +23,7 @@
 @synthesize titleBackgroundColor;
 @synthesize titleTextColor;
 @synthesize menuHilightedColor;
+@synthesize checkMarkColor;
 
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor
 {
@@ -64,6 +65,7 @@
             appearance.menuHilightedColor = [UIColor colorWithWhite:0.5 alpha:0.5];    
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
             appearance.titleTextColor = [UIColor whiteColor];
+            appearance.checkMarkColor = [UIColor whiteColor];
             break;
 
         case LKPopupMenuColorWhite:
@@ -72,8 +74,18 @@
             appearance.menuHilightedColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.85 alpha:0.75];
             appearance.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.95];
             appearance.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
+            appearance.checkMarkColor = [UIColor darkGrayColor];
             break;
 
+        case LKPopupMenuColorGray:
+            appearance.menuBackgroundColor = [UIColor colorWithWhite:0.75 alpha:0.9];
+            appearance.menuTextColor = [UIColor whiteColor];
+            appearance.menuHilightedColor = [UIColor colorWithWhite:0.45 alpha:0.9];
+            appearance.titleBackgroundColor = [UIColor colorWithWhite:0.5 alpha:0.9];
+            appearance.titleTextColor = [UIColor whiteColor];
+            appearance.checkMarkColor = [UIColor whiteColor];
+            break;
+            
         default:
             break;
     }
@@ -105,6 +117,7 @@
 
 @property (nonatomic, assign) UIView* parentView;
 @property (nonatomic, retain) LKPopupMenuView* popupMenuView;
+@property (nonatomic, assign) BOOL shown;
 
 @end
 
@@ -242,27 +255,8 @@
         menuY += deltaY;
     }
     
-    //TODO
-    switch (self.popupMenu.arrangementMode) {
-        case LKPopupMenuArrangementModeUp:
-            menuX = floor(menuX + 0.5);
-            menuY = floor(menuY + 0.5);
-            break;
-            
-        case LKPopupMenuArrangementModeDown:
-            menuX = floor(menuX + 0.5);
-            menuY = floor(menuY + 0.5);
-            break;
-            
-        case LKPopupMenuArrangementModeRight:
-            menuX = floor(menuX + 0.5);
-            menuY = floor(menuY + 0.5);
-            break;
-            
-        case LKPopupMenuArrangementModeLeft:
-            menuY = floor(menuY + 0.5);
-            break;
-    }
+    menuX = floor(menuX + 0.5);
+    menuY = floor(menuY + 0.5);
 
     CGRect frame = CGRectMake(menuX, menuY, menuWidth, menuHeight);
 
@@ -349,7 +343,7 @@
             p.y -= self.shadowOffset;
             [path moveToPoint:p];
             p.x -= self.triangleSize.width/2.0;
-            p.y -= self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.y -= self.triangleSize.height + LK_POPUP_MENU_PADDING - 0.5;
             [path addLineToPoint:p];
             p.x += self.triangleSize.width;
             [path addLineToPoint:p];
@@ -358,7 +352,7 @@
         case LKPopupMenuArrangementModeDown:
             [path moveToPoint:p];
             p.x -= self.triangleSize.width/2.0;
-            p.y += self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.y += self.triangleSize.height + LK_POPUP_MENU_PADDING + 0.5;
             [path addLineToPoint:p];
             p.x += self.triangleSize.width;
             [path addLineToPoint:p];
@@ -366,7 +360,7 @@
             
         case LKPopupMenuArrangementModeRight:
             [path moveToPoint:p];
-            p.x += self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.x += self.triangleSize.height + LK_POPUP_MENU_PADDING + 0.5;
             p.y -= self.triangleSize.width/2.0;
             [path addLineToPoint:p];
             p.y += self.triangleSize.width;
@@ -376,7 +370,7 @@
         case LKPopupMenuArrangementModeLeft:
             p.x -= self.shadowOffset;
             [path moveToPoint:p];
-            p.x -= self.triangleSize.height + LK_POPUP_MENU_PADDING;
+            p.x -= self.triangleSize.height + LK_POPUP_MENU_PADDING - 0.5;
             p.y -= self.triangleSize.width/2.0;
             [path addLineToPoint:p];
             p.y += self.triangleSize.width;
@@ -422,15 +416,72 @@
 @end
 
 //------------------------------------------------------------------------------
+@interface LKPopupMenuCheckMarkView : UIView
+//------------------------------------------------------------------------------
+@property (nonatomic, retain) UIColor* color;
++ (LKPopupMenuCheckMarkView*)checkMarkViewAtPoint:(CGPoint)p color:(UIColor*)color;
+@end
+
+//------------------------------------------------------------------------------
+@implementation LKPopupMenuCheckMarkView
+//------------------------------------------------------------------------------
+#define LK_POPUP_MENU_CHECK_MARK_SIZE   16
+
+@synthesize color = color_;
+
++ (LKPopupMenuCheckMarkView*)checkMarkViewAtPoint:(CGPoint)p color:(UIColor*)color
+{
+    CGRect frame = CGRectMake(p.x, p.y, LK_POPUP_MENU_CHECK_MARK_SIZE, LK_POPUP_MENU_CHECK_MARK_SIZE);
+    LKPopupMenuCheckMarkView* view = [[[LKPopupMenuCheckMarkView alloc]
+                                       initWithFrame:frame] autorelease];
+    view.color = color;
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    UIBezierPath* path = [UIBezierPath bezierPath];
+
+    CGPoint p = CGPointMake(3, 9);
+    [path moveToPoint:p];
+    
+    p.x += 4;
+    p.y += 4;
+    [path addLineToPoint:p];
+
+    p.x += 6;
+    p.y -= 10;
+    [path addLineToPoint:p];
+    
+    [path setLineWidth:2.0];
+    [self.color setStroke];
+    [path stroke];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    NSLog(@"%s|%@", __PRETTY_FUNCTION__, nil);
+}
+- (void)dealloc {
+    self.color = nil;
+    [super dealloc];
+}
+
+@end
+
+
+//------------------------------------------------------------------------------
 @interface LKPopupMenuCell : UITableViewCell
 //------------------------------------------------------------------------------
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu;
 @property (nonatomic, assign) UIColor* hilightedColor;
-
+@property (nonatomic, retain) LKPopupMenuCheckMarkView* checkMarkView;
 @end
 
 @implementation LKPopupMenuCell
 @synthesize hilightedColor = hilightedColor_;
+@synthesize checkMarkView = checkMarkView_;
 
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu
 {
@@ -441,9 +492,12 @@
         cell = [[[LKPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
         cell.textLabel.font = [UIFont systemFontOfSize:popupMenu.appearance.fontSize];
         cell.textLabel.textColor = popupMenu.appearance.menuTextColor;
-        cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.hilightedColor = popupMenu.appearance.menuHilightedColor;
+        CGPoint p = CGPointMake(tableView.frame.size.width - LK_POPUP_MENU_CHECK_MARK_SIZE - 8.0,
+                                (popupMenu.appearance.cellHeight - LK_POPUP_MENU_CHECK_MARK_SIZE)/2.0);
+        cell.checkMarkView = [LKPopupMenuCheckMarkView checkMarkViewAtPoint:p color:popupMenu.appearance.checkMarkColor];
+        [cell.contentView addSubview:cell.checkMarkView];
     }
     return cell;
 }
@@ -459,6 +513,7 @@
 
 - (void)dealloc {
     self.hilightedColor = nil;
+    self.checkMarkView = nil;
     [super dealloc];
 }
 @end
@@ -471,6 +526,8 @@
 @synthesize delegate = delegate_;
 @synthesize selectionMode = selectionMode_;
 @synthesize arrangementMode = arrangementMode_;
+@synthesize animationMode = animationMode_;
+
 @synthesize parentView = parentView_;
 @synthesize title = title_;
 @synthesize shown = shown_;
@@ -495,6 +552,7 @@
         self.heightSizeMode = LKPopupMenuHeightSizeModeAuto;
         self.selectionMode = LKPopupMenuSelectionModeSingle;
         self.arrangementMode = LKPopupMenuArrangementModeDown;
+        self.animationMode = LKPopupMenuAnimationModeSlide;
         self.shadowEnabled = YES;
         self.triangleEnabled = YES;
         self.selectedIndexSet = [NSMutableSet set];
@@ -537,6 +595,8 @@
 
 - (void)showAtLocation:(CGPoint)location
 {
+    self.shown = YES;
+
     if ([self.delegate respondsToSelector:@selector(willAppearPopupMenu:)]) {
         [self.delegate willAppearPopupMenu:self];
     }
@@ -552,23 +612,143 @@
                                                             Location:location
                                                                title:title
                            ] autorelease];
-    self.popupMenuView.alpha = 0.0;
+
     [self.parentView addSubview:self.popupMenuView];
-    if (self.popupMenuView.alpha == 0.0) {
-        [UIView animateWithDuration:0.2 animations:^{
-            self.popupMenuView.alpha = 1.0;            
-        }];
-    }
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+
+    if (self.animationMode != LKPopupMenuAnimationModeNone) {
+
+        CGAffineTransform t1 = self.popupMenuView.transform;
+        CGAffineTransform t2 = self.popupMenuView.transform;
+        CGSize viewSize = self.popupMenuView.frame.size;
+        
+        if (self.animationMode == LKPopupMenuAnimationModeSlide) {
+            switch (self.arrangementMode) {
+                case LKPopupMenuArrangementModeUp:
+                    t1 = CGAffineTransformTranslate(t1, 0, viewSize.height/2.0);
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    break;
+
+                case LKPopupMenuArrangementModeDown:
+                    t1 = CGAffineTransformTranslate(t1, 0, -viewSize.height/2.0);
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    break;
+                    
+                case LKPopupMenuArrangementModeRight:
+                    t1 = CGAffineTransformTranslate(t1, -viewSize.width/2.0, 0);
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    break;
+
+                case LKPopupMenuArrangementModeLeft:
+                    t1 = CGAffineTransformTranslate(t1, viewSize.width/2.0, 0);
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    break;
+            }
+            self.popupMenuView.alpha = 0.5;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.popupMenuView.transform = t2;
+                self.popupMenuView.alpha = 1.0;
+            }];
+
+        } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
+            switch (self.arrangementMode) {
+                case LKPopupMenuArrangementModeUp:
+                case LKPopupMenuArrangementModeDown:
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    break;
+                    
+                case LKPopupMenuArrangementModeRight:
+                case LKPopupMenuArrangementModeLeft:
+                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    break;
+            }
+            self.popupMenuView.alpha = 0.5;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.popupMenuView.transform = t2;
+                self.popupMenuView.alpha = 1.0;
+            }];
+
+        } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
+            self.popupMenuView.alpha = 0.0;
+            [UIView animateWithDuration:0.2 animations:^{
+                self.popupMenuView.alpha = 1.0;
+            }];            
+        }
+    }    
 }
 
 - (void)hide
 {
-    if (self.popupMenuView && self.popupMenuView.alpha) {
-        if ([self.delegate respondsToSelector:@selector(willDisappearPopupMenu:)]) {
-            [self.delegate willDisappearPopupMenu:self];
+    if (!self.shown) {
+        return;
+    }
+    self.shown = NO;
+
+    if ([self.delegate respondsToSelector:@selector(willDisappearPopupMenu:)]) {
+        [self.delegate willDisappearPopupMenu:self];
+    }
+
+    CGAffineTransform t = self.popupMenuView.transform;
+    CGSize viewSize = self.popupMenuView.frame.size;
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+
+    if (self.animationMode == LKPopupMenuAnimationModeNone) {
+        self.popupMenuView.hidden = YES;
+
+    } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
+        [UIView animateWithDuration:0.2
+                         animations:^{
+                             self.popupMenuView.alpha = 0.0;
+                         }];
+
+    } else if (self.animationMode == LKPopupMenuAnimationModeSlide) {
+        switch (self.arrangementMode) {
+            case LKPopupMenuArrangementModeUp:
+                t = CGAffineTransformTranslate(t, 0, viewSize.height/2.0);
+                t = CGAffineTransformScale(t, 1.0, 0.001);
+                break;
+                
+            case LKPopupMenuArrangementModeDown:
+                t = CGAffineTransformTranslate(t, 0, -viewSize.height/2.0);
+                t = CGAffineTransformScale(t, 1.0, 0.001);
+                break;
+                
+            case LKPopupMenuArrangementModeRight:
+                t = CGAffineTransformTranslate(t, -viewSize.width/2.0, 0);
+                t = CGAffineTransformScale(t, 0.001, 1.0);
+                break;
+                
+            case LKPopupMenuArrangementModeLeft:
+                t = CGAffineTransformTranslate(t, viewSize.width/2.0, 0);
+                t = CGAffineTransformScale(t, 0.001, 1.0);
+                break;
         }
+        
         [UIView animateWithDuration:0.2 animations:^{
-            self.popupMenuView.alpha = 0.0;            
+            self.popupMenuView.transform = t;
+            self.popupMenuView.alpha = 0.25;
+        } completion:^(BOOL finished){
+            self.popupMenuView.hidden = YES;
+        }];
+        
+    } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
+        switch (self.arrangementMode) {
+            case LKPopupMenuArrangementModeUp:
+            case LKPopupMenuArrangementModeDown:
+                t = CGAffineTransformScale(t, 0.001, 1.0);
+                break;
+                
+            case LKPopupMenuArrangementModeRight:
+            case LKPopupMenuArrangementModeLeft:
+                t = CGAffineTransformScale(t, 1.0, 0.001);
+                break;
+        }
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.popupMenuView.transform = t;
+            self.popupMenuView.alpha = 0.25;
+        } completion:^(BOOL finished){
+            self.popupMenuView.hidden = YES;
         }];
     }
 }
@@ -577,10 +757,6 @@
 #pragma mark -
 #pragma mark Properties
 
-- (BOOL)shown
-{
-    return (self.popupMenuView.alpha);
-}
 
 
 #pragma mark -
@@ -592,11 +768,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     LKPopupMenuCell* cell = [LKPopupMenuCell cellForTableView:tableView popupMenu:self];
-    if ([self.selectedIndexSet containsObject:indexPath]) {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    } else {
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
+
+    cell.checkMarkView.hidden = ![self.selectedIndexSet containsObject:indexPath];
     cell.textLabel.text = [self.list objectAtIndex:indexPath.row];
 
     return cell;

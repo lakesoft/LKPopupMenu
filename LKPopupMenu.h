@@ -38,8 +38,16 @@ typedef enum {
 typedef enum {
     LKPopupMenuColorDefault = 0,
     LKPopupMenuColorBlack,
-    LKPopupMenuColorWhite
+    LKPopupMenuColorWhite,
+    LKPopupMenuColorGray
 } LKPopupMenuColor;
+
+typedef enum {
+    LKPopupMenuAnimationModeNone = 0,
+    LKPopupMenuAnimationModeSlide,
+    LKPopupMenuAnimationModeOpenClose,
+    LKPopupMenuAnimationModeFade
+} LKPopupMenuAnimationMode;
 
 
 @class LKPopupMenu;
@@ -62,6 +70,7 @@ typedef enum {
 @property (nonatomic, retain) UIColor* menuHilightedColor;
 @property (nonatomic, retain) UIColor* titleBackgroundColor;
 @property (nonatomic, retain) UIColor* titleTextColor;
+@property (nonatomic, retain) UIColor* checkMarkColor;
 
 // size
 @property (nonatomic, assign) CGFloat titleHeight;
@@ -90,6 +99,7 @@ typedef enum {
 @property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
 @property (nonatomic, assign) LKPopupMenuArrangementMode arrangementMode;
 @property (nonatomic, assign) LKPopupMenuHeightSizeMode heightSizeMode;
+@property (nonatomic, assign) LKPopupMenuAnimationMode animationMode;
 
 // Properties (info)
 @property (nonatomic, assign, readonly) UIView* parentView;
