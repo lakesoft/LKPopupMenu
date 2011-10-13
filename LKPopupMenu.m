@@ -15,7 +15,7 @@
 @synthesize titleHeight;
 @synthesize cellHeight;
 @synthesize fontSize;
-@synthesize tableSize;
+@synthesize listWidth, listHeight;
 
 // colors
 @synthesize menuBackgroundColor;
@@ -35,21 +35,24 @@
             appearance.titleHeight = 25.0;
             appearance.cellHeight = 30.0;
             appearance.fontSize = 12.0;
-            appearance.tableSize = CGSizeMake(120.0, 150.0);
+            appearance.listWidth = 120.0;
+            appearance.listHeight = 150.0;
             break;
             
         case LKPopupMenuSizeMedium:
             appearance.titleHeight = 30.0;
             appearance.cellHeight = 35.0;
             appearance.fontSize = 14.0;
-            appearance.tableSize = CGSizeMake(160.0, 190.0);
+            appearance.listWidth = 160.0;
+            appearance.listHeight = 190.0;
             break;
             
         case LKPopupMenuSizeLarge:
             appearance.titleHeight = 35.0;
             appearance.cellHeight = 40.0;
             appearance.fontSize = 17.0;
-            appearance.tableSize = CGSizeMake(200.0, 230.0);
+            appearance.listWidth = 200.0;
+            appearance.listHeight = 230.0;
             break;
             
         default:
@@ -173,11 +176,11 @@
 
     // setup list size
     CGFloat listWidth, listHeight;
-    listWidth = appearance.tableSize.width;
+    listWidth = appearance.listWidth;
     if (self.popupMenu.heightSizeMode == LKPopupMenuHeightSizeModeAuto) {
         listHeight = appearance.cellHeight * [self.popupMenu.list count] + self.titleHeight;
     } else {
-        listHeight = appearance.tableSize.height;
+        listHeight = appearance.listHeight;
     }
     
     // setup menu size
