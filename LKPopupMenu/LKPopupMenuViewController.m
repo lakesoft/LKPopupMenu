@@ -23,6 +23,7 @@
 @synthesize menuSize;
 @synthesize menuColor;
 @synthesize animationMode;
+@synthesize modalEnabled;
 
 - (void)didReceiveMemoryWarning
 {
@@ -49,6 +50,7 @@
     self.menuSize = LKPopupMenuSizeMedium;
     self.triangleEnabled = YES;
     self.animationMode = LKPopupMenuAnimationModeSlide;
+    self.modalEnabled = YES;
 }
 
 - (void)dealloc {
@@ -78,12 +80,12 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (self.popupMenu.shown) {
-        [self.popupMenu hide];
-        [self.sizeMenu hide];
-        [self.colorMenu hide];
-        [self.animationMenu hide];
-    }
+//    if (self.popupMenu.shown) {
+//        [self.popupMenu hide];
+//        [self.sizeMenu hide];
+//        [self.colorMenu hide];
+//        [self.animationMenu hide];
+//    }
     [self.menuTitle resignFirstResponder];
 }
 
@@ -132,6 +134,7 @@
         self.popupMenu.animationMode = self.animationMode;
         self.popupMenu.shadowEnabled = self.shadowEnabled;
         self.popupMenu.triangleEnabled = self.triangleEnabled;
+        self.popupMenu.modalEnabled = self.modalEnabled;
         self.popupMenu.appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
                                                                                color:self.menuColor];
 
@@ -182,7 +185,8 @@
         }
         self.colorMenu.title = @"Menu Color";
         self.colorMenu.arrangementMode = LKPopupMenuArrangementModeUp;
-        self.colorMenu.triangleEnabled = YES;        
+        self.colorMenu.triangleEnabled = YES;    
+        self.colorMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:0];
         [self.colorMenu showAtLocation:location];
     }
 }
@@ -204,6 +208,7 @@
         self.sizeMenu.title = @"Menu Size";
         self.sizeMenu.arrangementMode = LKPopupMenuArrangementModeUp;
         self.sizeMenu.triangleEnabled = YES;
+        self.sizeMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:0];
         [self.sizeMenu showAtLocation:location];
     }
 }
@@ -227,14 +232,18 @@
             self.animationMenu.list = [NSArray arrayWithObjects:
                                    @"None", @"Slide", @"OpenClose", @"Fade", nil];
             self.animationMenu.delegate = self;
-            self.animationMenu.selectedIndexSet = [NSMutableSet setWithObject:
-                                                [NSIndexPath indexPathForRow:LKPopupMenuAnimationModeSlide inSection:0]];
+            self.animationMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:LKPopupMenuAnimationModeSlide];
         }
         self.animationMenu.title = @"Animation Mode";
         self.animationMenu.arrangementMode = LKPopupMenuArrangementModeUp;
         self.animationMenu.triangleEnabled = YES;        
         [self.animationMenu showAtLocation:location];
     }
+}
+
+- (IBAction)didChangeModal:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.modalEnabled = sw.on;
 }
 
 - (IBAction)popupToDown:(id)sender {

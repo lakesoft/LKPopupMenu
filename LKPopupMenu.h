@@ -90,7 +90,7 @@ typedef enum {
 //------------------------------------------------------------------------------
 // Properties (data)
 @property (nonatomic, retain) NSArray* list;
-@property (nonatomic, retain) NSMutableSet* selectedIndexSet;
+@property (nonatomic, retain) NSMutableIndexSet* selectedIndexSet;
 @property (nonatomic, copy) NSString* title;
 
 // Properties (delegate)
@@ -101,6 +101,7 @@ typedef enum {
 @property (nonatomic, assign) LKPopupMenuArrangementMode arrangementMode;
 @property (nonatomic, assign) LKPopupMenuHeightSizeMode heightSizeMode;
 @property (nonatomic, assign) LKPopupMenuAnimationMode animationMode;
+@property (nonatomic, assign) BOOL modalEnabled;
 
 // Properties (info)
 @property (nonatomic, assign, readonly) UIView* parentView;

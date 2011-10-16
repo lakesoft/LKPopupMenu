@@ -116,12 +116,35 @@
 
 //------------------------------------------------------------------------------
 @class LKPopupMenuView;
+@class LKPopupBackgroundView;
 @interface LKPopupMenu() <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, assign) UIView* parentView;
 @property (nonatomic, retain) LKPopupMenuView* popupMenuView;
 @property (nonatomic, assign) BOOL shown;
+@property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
 
+- (void)didTouchBackgroundView;
+
+@end
+
+//------------------------------------------------------------------------------
+@interface LKPopupBackgroundView : UIView
+@property (nonatomic, assign) LKPopupMenu* popupMenu;
+@end
+@implementation LKPopupBackgroundView
+@synthesize popupMenu;
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.popupMenu didTouchBackgroundView];
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
 @end
 
 //------------------------------------------------------------------------------
@@ -530,6 +553,7 @@
 @synthesize selectionMode = selectionMode_;
 @synthesize arrangementMode = arrangementMode_;
 @synthesize animationMode = animationMode_;
+@synthesize modalEnabled = modalEnabled_;
 
 @synthesize parentView = parentView_;
 @synthesize title = title_;
@@ -542,6 +566,8 @@
 @synthesize triangleEnabled = triangleEnabled_;
 
 @synthesize popupMenuView = popupMenuView_;
+
+@synthesize backgroundView = backgroundView_;
 
 
 #pragma mark -
@@ -558,7 +584,8 @@
         self.animationMode = LKPopupMenuAnimationModeSlide;
         self.shadowEnabled = YES;
         self.triangleEnabled = YES;
-        self.selectedIndexSet = [NSMutableSet set];
+        self.selectedIndexSet = [NSMutableIndexSet indexSet];
+        self.modalEnabled = YES;
 
         self.appearance = appearance;
     }
@@ -578,6 +605,11 @@
     self.selectedIndexSet = nil;
 
     self.appearance = nil;
+    
+    if (self.backgroundView) {
+        [self.backgroundView removeFromSuperview];
+    }
+    self.backgroundView = nil;
 
     [super dealloc];
 }
@@ -616,6 +648,12 @@
                                                                title:title
                            ] autorelease];
 
+    if (self.modalEnabled) {
+        self.backgroundView = [[[LKPopupBackgroundView alloc] initWithFrame:self.parentView.bounds] autorelease];
+        self.backgroundView.popupMenu = self;
+        [self.parentView addSubview:self.backgroundView];
+    }
+    
     [self.parentView addSubview:self.popupMenuView];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 
@@ -758,8 +796,14 @@
 
 
 #pragma mark -
-#pragma mark Properties
+#pragma mark Etc
 
+- (void)didTouchBackgroundView
+{
+    [self.backgroundView removeFromSuperview];
+    self.backgroundView = nil;
+    [self hide];
+}
 
 
 #pragma mark -
@@ -772,7 +816,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     LKPopupMenuCell* cell = [LKPopupMenuCell cellForTableView:tableView popupMenu:self];
 
-    cell.checkMarkView.hidden = ![self.selectedIndexSet containsObject:indexPath];
+    cell.checkMarkView.hidden = ![self.selectedIndexSet containsIndex:indexPath.row];
     cell.textLabel.text = [self.list objectAtIndex:indexPath.row];
 
     return cell;
@@ -790,17 +834,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (self.selectionMode == LKPopupMenuSelectionModeSingle) {
-        [self.selectedIndexSet removeAllObjects];
-        [self.selectedIndexSet addObject:indexPath];
+        [self.selectedIndexSet removeAllIndexes];
+        [self.selectedIndexSet addIndex:indexPath.row];
         if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
             [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];
         }
         [self hide];
     } else {
-        if ([self.selectedIndexSet containsObject:indexPath]) {
-            [self.selectedIndexSet removeObject:indexPath];
+        if ([self.selectedIndexSet containsIndex:indexPath.row]) {
+            [self.selectedIndexSet removeIndex:indexPath.row];
         } else {
-            [self.selectedIndexSet addObject:indexPath];            
+            [self.selectedIndexSet addIndex:indexPath.row];        
         }
         if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
             [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];

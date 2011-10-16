@@ -27,6 +27,7 @@
 @property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL triangleEnabled;
+@property (nonatomic, assign) BOOL modalEnabled;
 
 @property (nonatomic, assign) LKPopupMenuSize menuSize;
 @property (nonatomic, assign) LKPopupMenuColor menuColor;
@@ -43,5 +44,6 @@
 - (IBAction)didChangeSize:(id)sender;
 - (IBAction)didChangeTriangle:(id)sender;
 - (IBAction)didChangeAnimationMode:(id)sender;
+- (IBAction)didChangeModal:(id)sender;
 
 @end
