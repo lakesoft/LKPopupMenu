@@ -133,6 +133,7 @@
 @property (nonatomic, retain) LKPopupMenuView* popupMenuView;
 @property (nonatomic, assign) BOOL shown;
 @property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
+@property (nonatomic, retain) NSMutableIndexSet* indexSet;
 
 @end
 
@@ -574,9 +575,10 @@
 //------------------------------------------------------------------------------
 @implementation LKPopupMenu
 //------------------------------------------------------------------------------
+@synthesize indexSet = indexSet_;
+
 @synthesize textList = textList_;
 @synthesize imageFilenameList = imageFilenameList;
-@synthesize selectedIndexSet = selectedIndexSet_;
 @synthesize delegate = delegate_;
 @synthesize selectionMode = selectionMode_;
 @synthesize arrangementMode = arrangementMode_;
@@ -617,6 +619,7 @@
         self.selectedIndexSet = [NSMutableIndexSet indexSet];
         self.modalEnabled = YES;
         self.separatorEnabled = YES;
+        self.indexSet = [NSMutableIndexSet indexSet];
 
         self.appearance = appearance;
     }
@@ -634,7 +637,7 @@
     self.parentView = nil;
     self.title = nil;
 
-    self.selectedIndexSet = nil;
+    self.indexSet = nil;
 
     self.appearance = nil;
     
@@ -644,6 +647,18 @@
     self.backgroundView = nil;
 
     [super dealloc];
+}
+
+#pragma mark -
+#pragma mark Properties
+- (void)setSelectedIndexSet:(NSIndexSet *)selectedIndexSet
+{
+    self.indexSet = [[[NSMutableIndexSet alloc] initWithIndexSet:selectedIndexSet] autorelease];
+}
+
+- (NSIndexSet*)selectedIndexSet
+{
+    return self.indexSet;
 }
 
 #pragma mark -
@@ -888,17 +903,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (self.selectionMode == LKPopupMenuSelectionModeSingle) {
-        [self.selectedIndexSet removeAllIndexes];
-        [self.selectedIndexSet addIndex:indexPath.row];
+        [self.indexSet removeAllIndexes];
+        [self.indexSet addIndex:indexPath.row];
         if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
             [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];
         }
         [self hide];
     } else {
-        if ([self.selectedIndexSet containsIndex:indexPath.row]) {
-            [self.selectedIndexSet removeIndex:indexPath.row];
+        if ([self.indexSet containsIndex:indexPath.row]) {
+            [self.indexSet removeIndex:indexPath.row];
         } else {
-            [self.selectedIndexSet addIndex:indexPath.row];        
+            [self.indexSet addIndex:indexPath.row];        
         }
         if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
             [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];

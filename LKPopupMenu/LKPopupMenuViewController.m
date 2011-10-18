@@ -186,7 +186,7 @@
         self.colorMenu.title = @"Menu Color";
         self.colorMenu.arrangementMode = LKPopupMenuArrangementModeUp;
         self.colorMenu.triangleEnabled = YES;    
-        self.colorMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:0];
+        self.colorMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:0];
         [self.colorMenu showAtLocation:location];
     }
 }
@@ -204,7 +204,7 @@
             self.sizeMenu.textList = [NSArray arrayWithObjects:
                                     @"Small", @"Medium", @"Large", nil];
             self.sizeMenu.delegate = self;
-            self.sizeMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:LKPopupMenuSizeMedium];
+            self.sizeMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuSizeMedium];
         }
         self.sizeMenu.title = @"Menu Size";
         self.sizeMenu.arrangementMode = LKPopupMenuArrangementModeUp;
@@ -232,7 +232,7 @@
             self.animationMenu.textList = [NSArray arrayWithObjects:
                                    @"None", @"Slide", @"OpenClose", @"Fade", nil];
             self.animationMenu.delegate = self;
-            self.animationMenu.selectedIndexSet = [NSMutableIndexSet indexSetWithIndex:LKPopupMenuAnimationModeSlide];
+            self.animationMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuAnimationModeSlide];
         }
         self.animationMenu.title = @"Animation Mode";
         self.animationMenu.arrangementMode = LKPopupMenuArrangementModeUp;

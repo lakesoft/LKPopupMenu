@@ -95,7 +95,7 @@ typedef enum {
 // Properties (data)
 @property (nonatomic, retain) NSArray* textList;
 @property (nonatomic, retain) NSArray* imageFilenameList;
-@property (nonatomic, retain) NSMutableIndexSet* selectedIndexSet;
+@property (nonatomic, retain) NSIndexSet* selectedIndexSet;
 @property (nonatomic, copy) NSString* title;
 
 // Properties (delegate)
