@@ -24,6 +24,8 @@
 @synthesize titleTextColor;
 @synthesize menuHilightedColor;
 @synthesize checkMarkColor;
+@synthesize separatorColor;
+@synthesize indicatorStyle;
 
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor
 {
@@ -69,24 +71,30 @@
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
             appearance.titleTextColor = [UIColor whiteColor];
             appearance.checkMarkColor = [UIColor whiteColor];
+            appearance.separatorColor = [UIColor colorWithWhite:0.4 alpha:0.9];
+            appearance.indicatorStyle = UIScrollViewIndicatorStyleWhite;            
             break;
 
         case LKPopupMenuColorWhite:
             appearance.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
             appearance.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
-            appearance.menuHilightedColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.85 alpha:0.75];
+            appearance.menuHilightedColor = [UIColor colorWithWhite:0.75 alpha:1.0];
             appearance.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.95];
             appearance.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
             appearance.checkMarkColor = [UIColor darkGrayColor];
+            appearance.separatorColor = [UIColor colorWithWhite:0.75 alpha:1.0];
+            appearance.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             break;
 
         case LKPopupMenuColorGray:
             appearance.menuBackgroundColor = [UIColor colorWithWhite:0.75 alpha:0.9];
             appearance.menuTextColor = [UIColor whiteColor];
-            appearance.menuHilightedColor = [UIColor colorWithWhite:0.45 alpha:0.9];
+            appearance.menuHilightedColor = [UIColor colorWithWhite:0.6 alpha:0.9];
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.5 alpha:0.9];
             appearance.titleTextColor = [UIColor whiteColor];
             appearance.checkMarkColor = [UIColor whiteColor];
+            appearance.separatorColor = [UIColor colorWithWhite:0.85 alpha:0.9];
+            appearance.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             break;
             
         default:
@@ -106,9 +114,11 @@
 {
     self.menuBackgroundColor = nil;
     self.menuTextColor = nil;
+    self.menuHilightedColor = nil;
     self.titleBackgroundColor = nil;
     self.titleTextColor = nil;
-    self.menuHilightedColor = nil;
+    self.checkMarkColor = nil;
+    self.separatorColor = nil;
     [super dealloc];
 }
             
@@ -124,8 +134,6 @@
 @property (nonatomic, assign) BOOL shown;
 @property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
 
-- (void)didTouchBackgroundView;
-
 @end
 
 //------------------------------------------------------------------------------
@@ -136,7 +144,7 @@
 @synthesize popupMenu;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self.popupMenu didTouchBackgroundView];
+    [self.popupMenu hide];
 }
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -201,7 +209,7 @@
     CGFloat listWidth, listHeight;
     listWidth = appearance.listWidth;
     if (self.popupMenu.heightSizeMode == LKPopupMenuHeightSizeModeAuto) {
-        listHeight = appearance.cellHeight * [self.popupMenu.list count] + self.titleHeight;
+        listHeight = appearance.cellHeight * [self.popupMenu.textList count] + self.titleHeight;
     } else {
         listHeight = appearance.listHeight;
     }
@@ -312,7 +320,7 @@
                                                        style:UITableViewStylePlain] autorelease];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.tableView.showsVerticalScrollIndicator = YES;
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+        self.tableView.indicatorStyle = appearance.indicatorStyle;
         self.tableView.bounces = NO;
         
         self.tableView.backgroundColor = [UIColor clearColor];
@@ -501,13 +509,15 @@
 @interface LKPopupMenuCell : UITableViewCell
 //------------------------------------------------------------------------------
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu;
-@property (nonatomic, assign) UIColor* hilightedColor;
 @property (nonatomic, retain) LKPopupMenuCheckMarkView* checkMarkView;
+@property (nonatomic, assign) LKPopupMenuAppearance* appearance;
+@property (nonatomic, assign) BOOL separatorEnabled;
 @end
 
 @implementation LKPopupMenuCell
-@synthesize hilightedColor = hilightedColor_;
 @synthesize checkMarkView = checkMarkView_;
+@synthesize appearance = appearance_;
+@synthesize separatorEnabled = separatorEnabled_;
 
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu
 {
@@ -516,13 +526,14 @@
     LKPopupMenuCell *cell = (LKPopupMenuCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         cell = [[[LKPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
-        cell.textLabel.font = [UIFont systemFontOfSize:popupMenu.appearance.fontSize];
-        cell.textLabel.textColor = popupMenu.appearance.menuTextColor;
+        cell.appearance = popupMenu.appearance;
+        cell.textLabel.font = [UIFont systemFontOfSize:cell.appearance.fontSize];
+        cell.textLabel.textColor = cell.appearance.menuTextColor;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.hilightedColor = popupMenu.appearance.menuHilightedColor;
         CGPoint p = CGPointMake(tableView.frame.size.width - LK_POPUP_MENU_CHECK_MARK_SIZE - 8.0,
-                                (popupMenu.appearance.cellHeight - LK_POPUP_MENU_CHECK_MARK_SIZE)/2.0);
-        cell.checkMarkView = [LKPopupMenuCheckMarkView checkMarkViewAtPoint:p color:popupMenu.appearance.checkMarkColor];
+                                (cell.appearance.cellHeight - LK_POPUP_MENU_CHECK_MARK_SIZE)/2.0);
+        cell.checkMarkView = [LKPopupMenuCheckMarkView checkMarkViewAtPoint:p color:cell.appearance.checkMarkColor];
+        cell.separatorEnabled = popupMenu.separatorEnabled;
         [cell.contentView addSubview:cell.checkMarkView];
     }
     return cell;
@@ -531,15 +542,31 @@
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     if (highlighted) {
-        self.contentView.backgroundColor = self.hilightedColor;
+        self.contentView.backgroundColor = self.appearance.menuHilightedColor;
     } else {
         self.contentView.backgroundColor = [UIColor clearColor];
     }
 }
 
+- (void)drawRect:(CGRect)rect
+{
+    [super drawRect:rect];
+    
+    if (self.separatorEnabled) {
+        UIBezierPath* path = [UIBezierPath bezierPath];
+        CGPoint p = CGPointMake(0, 0);
+        [path moveToPoint:p];
+        p.x += self.bounds.size.width - 1.0;
+        [path addLineToPoint:p];
+
+        [self.appearance.separatorColor setStroke];
+        [path stroke];
+    }    
+}
+
 - (void)dealloc {
-    self.hilightedColor = nil;
     self.checkMarkView = nil;
+    self.appearance = nil;
     [super dealloc];
 }
 @end
@@ -547,7 +574,8 @@
 //------------------------------------------------------------------------------
 @implementation LKPopupMenu
 //------------------------------------------------------------------------------
-@synthesize list = list_;
+@synthesize textList = textList_;
+@synthesize imageFilenameList = imageFilenameList;
 @synthesize selectedIndexSet = selectedIndexSet_;
 @synthesize delegate = delegate_;
 @synthesize selectionMode = selectionMode_;
@@ -564,6 +592,7 @@
 @synthesize appearance = appearance_;
 @synthesize shadowEnabled = shadowEnabled_;
 @synthesize triangleEnabled = triangleEnabled_;
+@synthesize separatorEnabled = separatorEnabled_;
 
 @synthesize popupMenuView = popupMenuView_;
 
@@ -584,8 +613,10 @@
         self.animationMode = LKPopupMenuAnimationModeSlide;
         self.shadowEnabled = YES;
         self.triangleEnabled = YES;
+        self.separatorEnabled = YES;
         self.selectedIndexSet = [NSMutableIndexSet indexSet];
         self.modalEnabled = YES;
+        self.separatorEnabled = YES;
 
         self.appearance = appearance;
     }
@@ -593,7 +624,8 @@
 }
 
 - (void)dealloc {
-    self.list = nil;
+    self.textList = nil;
+    self.imageFilenameList = nil;
     self.delegate = nil;
     if (self.popupMenuView) {
         [self.popupMenuView removeFromSuperview];
@@ -640,7 +672,7 @@
         [self.popupMenuView removeFromSuperview];
         self.popupMenuView = nil;
     }
-
+    
     // create new popup mewnu view
     NSString* title = self.title ? [@" " stringByAppendingString:self.title] : nil;
     self.popupMenuView = [[[LKPopupMenuView alloc] initWithPopupMenu:self
@@ -686,10 +718,18 @@
                     break;
             }
             self.popupMenuView.alpha = 0.5;
-            [UIView animateWithDuration:0.2 animations:^{
-                self.popupMenuView.transform = t2;
-                self.popupMenuView.alpha = 1.0;
-            }];
+            self.popupMenuView.tableView.alpha = 0.0;
+            [UIView animateWithDuration:0.15
+                             animations:^{
+                                 self.popupMenuView.transform = t2;
+                                 self.popupMenuView.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.1
+                                                  animations:^{
+                                                      self.popupMenuView.tableView.alpha = 1.0;
+                                                  }];
+                             }];
 
         } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
             switch (self.arrangementMode) {
@@ -704,9 +744,17 @@
                     break;
             }
             self.popupMenuView.alpha = 0.5;
-            [UIView animateWithDuration:0.2 animations:^{
-                self.popupMenuView.transform = t2;
-                self.popupMenuView.alpha = 1.0;
+            self.popupMenuView.tableView.alpha = 0.0;
+            [UIView animateWithDuration:0.15
+                             animations:^{
+                                 self.popupMenuView.transform = t2;
+                                 self.popupMenuView.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.1
+                                                  animations:^{
+                                                      self.popupMenuView.tableView.alpha = 1.0;
+                                                  }];
             }];
 
         } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
@@ -724,6 +772,11 @@
         return;
     }
     self.shown = NO;
+    
+    if (self.backgroundView) {
+        [self.backgroundView removeFromSuperview];
+    }
+    self.backgroundView = nil;
 
     if ([self.delegate respondsToSelector:@selector(willDisappearPopupMenu:)]) {
         [self.delegate willDisappearPopupMenu:self];
@@ -765,6 +818,7 @@
                 break;
         }
         
+        self.popupMenuView.tableView.hidden = YES;
         [UIView animateWithDuration:0.2 animations:^{
             self.popupMenuView.transform = t;
             self.popupMenuView.alpha = 0.25;
@@ -785,6 +839,7 @@
                 break;
         }
         
+        self.popupMenuView.tableView.hidden = YES;
         [UIView animateWithDuration:0.2 animations:^{
             self.popupMenuView.transform = t;
             self.popupMenuView.alpha = 0.25;
@@ -794,30 +849,29 @@
     }
 }
 
-
-#pragma mark -
-#pragma mark Etc
-
-- (void)didTouchBackgroundView
-{
-    [self.backgroundView removeFromSuperview];
-    self.backgroundView = nil;
-    [self hide];
-}
-
-
 #pragma mark -
 #pragma mark UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.list count];
+    return [self.textList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     LKPopupMenuCell* cell = [LKPopupMenuCell cellForTableView:tableView popupMenu:self];
 
     cell.checkMarkView.hidden = ![self.selectedIndexSet containsIndex:indexPath.row];
-    cell.textLabel.text = [self.list objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.textList objectAtIndex:indexPath.row];
+    
+    if (self.imageFilenameList && indexPath.row < [self.imageFilenameList count]) {
+        NSString* imageFilename = [self.imageFilenameList objectAtIndex:indexPath.row];
+        if ([imageFilename isEqualToString:LKPopupMenuBlankImage]) {
+            UIGraphicsBeginImageContext(CGSizeMake(32, 32));
+            cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        } else {
+            cell.imageView.image = [UIImage imageNamed:imageFilename];
+        }
+    }
 
     return cell;
 }

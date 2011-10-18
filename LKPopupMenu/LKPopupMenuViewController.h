@@ -21,6 +21,8 @@
 @property (nonatomic, retain) LKPopupMenu* sizeMenu;
 @property (nonatomic, retain) LKPopupMenu* colorMenu;
 @property (nonatomic, retain) LKPopupMenu* animationMenu;
+@property (nonatomic, retain) LKPopupMenu* imageMenu;
+
 @property (nonatomic, retain) IBOutlet UITextField *menuTitle;
 
 @property (nonatomic, assign) LKPopupMenuHeightSizeMode sizeMode;
@@ -28,6 +30,7 @@
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL triangleEnabled;
 @property (nonatomic, assign) BOOL modalEnabled;
+@property (nonatomic, assign) BOOL separatorEnabled;
 
 @property (nonatomic, assign) LKPopupMenuSize menuSize;
 @property (nonatomic, assign) LKPopupMenuColor menuColor;
@@ -45,5 +48,7 @@
 - (IBAction)didChangeTriangle:(id)sender;
 - (IBAction)didChangeAnimationMode:(id)sender;
 - (IBAction)didChangeModal:(id)sender;
+- (IBAction)didChangeSeparator:(id)sender;
+- (IBAction)openImageMenu:(id)sender;
 
 @end

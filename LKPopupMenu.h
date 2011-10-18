@@ -49,6 +49,8 @@ typedef enum {
     LKPopupMenuAnimationModeFade
 } LKPopupMenuAnimationMode;
 
+#define LKPopupMenuBlankImage   @"LKPopupMenuBlankImage"
+
 
 @class LKPopupMenu;
 //------------------------------------------------------------------------------
@@ -71,6 +73,8 @@ typedef enum {
 @property (nonatomic, retain) UIColor* titleBackgroundColor;
 @property (nonatomic, retain) UIColor* titleTextColor;
 @property (nonatomic, retain) UIColor* checkMarkColor;
+@property (nonatomic, retain) UIColor* separatorColor;
+@property (nonatomic, assign) UIScrollViewIndicatorStyle indicatorStyle;
 
 // size
 @property (nonatomic, assign) CGFloat titleHeight;
@@ -89,7 +93,8 @@ typedef enum {
 @interface LKPopupMenu : NSObject
 //------------------------------------------------------------------------------
 // Properties (data)
-@property (nonatomic, retain) NSArray* list;
+@property (nonatomic, retain) NSArray* textList;
+@property (nonatomic, retain) NSArray* imageFilenameList;
 @property (nonatomic, retain) NSMutableIndexSet* selectedIndexSet;
 @property (nonatomic, copy) NSString* title;
 
@@ -111,6 +116,7 @@ typedef enum {
 @property (nonatomic, retain) LKPopupMenuAppearance* appearance;
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL triangleEnabled;
+@property (nonatomic, assign) BOOL separatorEnabled;
 
 // API
 + (LKPopupMenu*)popupMenuOnView:(UIView*)parentView;
