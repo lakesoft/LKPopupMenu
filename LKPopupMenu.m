@@ -11,12 +11,6 @@
 //------------------------------------------------------------------------------
 @implementation LKPopupMenuAppearance
 //------------------------------------------------------------------------------
-// size
-@synthesize titleHeight;
-@synthesize cellHeight;
-@synthesize fontSize;
-@synthesize listWidth, listHeight;
-
 // colors
 @synthesize menuBackgroundColor;
 @synthesize menuTextColor;
@@ -27,6 +21,13 @@
 @synthesize separatorColor;
 @synthesize outlineColor;
 @synthesize indicatorStyle;
+
+// size
+@synthesize titleHeight;
+@synthesize cellHeight;
+@synthesize fontSize;
+@synthesize listWidth, listHeight;
+@synthesize outlineWith;
 
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor
 {
@@ -40,6 +41,7 @@
             appearance.fontSize = 12.0;
             appearance.listWidth = 120.0;
             appearance.listHeight = 150.0;
+            appearance.outlineWith = 1.0;
             break;
             
         case LKPopupMenuSizeMedium:
@@ -48,6 +50,7 @@
             appearance.fontSize = 14.0;
             appearance.listWidth = 160.0;
             appearance.listHeight = 190.0;
+            appearance.outlineWith = 2.0;
             break;
             
         case LKPopupMenuSizeLarge:
@@ -56,6 +59,7 @@
             appearance.fontSize = 17.0;
             appearance.listWidth = 200.0;
             appearance.listHeight = 230.0;
+            appearance.outlineWith = 3.0;
             break;
             
         default:
@@ -135,7 +139,7 @@
 @interface LKPopupMenu() <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, assign) UIView* parentView;
-@property (nonatomic, retain) LKPopupMenuView* popupMenuView;
+@property (nonatomic, retain) LKPopupMenuView* popupMenuBaseView;
 @property (nonatomic, assign) BOOL shown;
 @property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
 @property (nonatomic, retain) NSMutableIndexSet* indexSet;
@@ -168,41 +172,170 @@
 #define LK_POPUP_MENU_TRIANGLE_SHORT         10.0
 
 #define LK_POPUP_MENU_SHADOW_OFFSET 2.5
+#define LK_POPUP_MENU_CORNER_RADIUS    5.0
+
+typedef enum {
+    LKPopupMenuViewTypeBase,
+    LKPopupMenuViewTypeFrame
+} LKPopupMenuViewType;
 
 @interface LKPopupMenuView : UIView
-@property (nonatomic, assign) CGPoint location;
 @property (nonatomic, assign) LKPopupMenu* popupMenu;
 @property (nonatomic, assign) UITableView* tableView;
 @property (nonatomic, assign) CGRect tableFrame;
 @property (nonatomic, assign) CGFloat shadowOffset;
 @property (nonatomic, assign) CGSize triangleSize;
 @property (nonatomic, assign) CGFloat titleHeight;
+@property (nonatomic, retain) UIBezierPath* path;
+@property (nonatomic, assign) LKPopupMenuViewType type;
 
+- (id)initAsBaseWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title;
+- (id)initAsFrameWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title;
+- (void)setupPathAtLocation:(CGPoint)location;
 - (void)reloadData;
 
 @end
 
 @implementation LKPopupMenuView
-@synthesize location = location_;
 @synthesize popupMenu = popupMenu_;
 @synthesize tableView = tableView_;
 @synthesize tableFrame = tableFrame_;
 @synthesize shadowOffset = shadowOffset_;
 @synthesize triangleSize = triangleSize_;
 @synthesize titleHeight = titleHeight_;
+@synthesize path = path_;
+@synthesize type = type_;
 
-- (id)initWithPopupMenu:(LKPopupMenu*)popupMenu Location:(CGPoint)location title:(NSString*)title
+- (void)setupPathAtLocation:(CGPoint)location
 {
+    UIBezierPath* path = [UIBezierPath bezierPath];
+    path.lineJoinStyle = kCGLineJoinRound;
+    
+    CGPoint p = self.tableFrame.origin;
+    CGPoint tp = location;
+    
+    p.x += LK_POPUP_MENU_CORNER_RADIUS;
+    [path moveToPoint:p];
+    
+    // upper
+    if (self.popupMenu.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown) {
+        p.x = tp.x - self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x += self.triangleSize.width/2.0;
+        p.y -= self.triangleSize.height;
+        [path addLineToPoint:p];
+        p.x += self.triangleSize.width/2.0;
+        p.y += self.triangleSize.height;
+        [path addLineToPoint:p];
+        p.x = self.tableFrame.origin.x + self.tableFrame.size.width - LK_POPUP_MENU_CORNER_RADIUS;
+        [path addLineToPoint:p];
+    } else {
+        p.x += self.tableFrame.size.width - LK_POPUP_MENU_CORNER_RADIUS*2;
+        [path addLineToPoint:p];
+    }
+    
+    // upper right
+    p.y += LK_POPUP_MENU_CORNER_RADIUS;
+    [path addArcWithCenter:p
+                    radius:LK_POPUP_MENU_CORNER_RADIUS
+                startAngle:-1.0*M_PI/2.0
+                  endAngle:0.0*M_PI/2.0
+                 clockwise:YES];
+    
+    // right
+    p.x += LK_POPUP_MENU_CORNER_RADIUS;
+    if (self.popupMenu.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeLeft) {
+        p.y = tp.y - self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x += self.triangleSize.height;
+        p.y += self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x -= self.triangleSize.height;
+        p.y += self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.y = self.tableFrame.origin.y + self.tableFrame.size.height - LK_POPUP_MENU_CORNER_RADIUS;
+        [path addLineToPoint:p];
+    } else {
+        p.y += self.tableFrame.size.height - LK_POPUP_MENU_CORNER_RADIUS*2;
+        [path addLineToPoint:p];
+    }
+    
+    // lower right
+    p.x -= LK_POPUP_MENU_CORNER_RADIUS;    
+    [path addArcWithCenter:p
+                    radius:LK_POPUP_MENU_CORNER_RADIUS
+                startAngle:0.0*M_PI/2.0
+                  endAngle:1.0*M_PI/2.0
+                 clockwise:YES];
+    
+    // lower
+    p.y += LK_POPUP_MENU_CORNER_RADIUS;
+    if (self.popupMenu.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeUp) {
+        p.x = tp.x + self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x -= self.triangleSize.width/2.0;
+        p.y += self.triangleSize.height;
+        [path addLineToPoint:p];
+        p.x -= self.triangleSize.width/2.0;
+        p.y -= self.triangleSize.height;
+        [path addLineToPoint:p];
+        p.x = self.tableFrame.origin.x + LK_POPUP_MENU_CORNER_RADIUS;
+        [path addLineToPoint:p];
+    } else {
+        p.x -= self.tableFrame.size.width - LK_POPUP_MENU_CORNER_RADIUS*2;
+        [path addLineToPoint:p];
+    }
+    
+    // lower left
+    p.y -= LK_POPUP_MENU_CORNER_RADIUS;
+    [path addArcWithCenter:p
+                    radius:LK_POPUP_MENU_CORNER_RADIUS
+                startAngle:1.0*M_PI/2.0
+                  endAngle:2.0*M_PI/2.0
+                 clockwise:YES];
+    
+    // left
+    p.x -= LK_POPUP_MENU_CORNER_RADIUS;
+    if (self.popupMenu.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeRight) {
+        p.y = tp.y + self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x -= self.triangleSize.height;
+        p.y -= self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.x += self.triangleSize.height;
+        p.y -= self.triangleSize.width/2.0;
+        [path addLineToPoint:p];
+        p.y = self.tableFrame.origin.y + LK_POPUP_MENU_CORNER_RADIUS;
+        [path addLineToPoint:p];
+    } else {
+        p.y -= self.tableFrame.size.height - LK_POPUP_MENU_CORNER_RADIUS*2;
+        [path addLineToPoint:p];
+    }
+    
+    // upper left
+    p.x += LK_POPUP_MENU_CORNER_RADIUS;
+    [path addArcWithCenter:p
+                    radius:LK_POPUP_MENU_CORNER_RADIUS
+                startAngle:2.0*M_PI/2.0
+                  endAngle:3.0*M_PI/2.0
+                 clockwise:YES];
+    [path closePath];
+
+    self.path = path;
+}
+
+ - (id)_initAsType:(LKPopupMenuViewType)type WithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+{
+    self.type = type;
     self.popupMenu = popupMenu;
-    self.location = location;
     LKPopupMenuAppearance* appearance = popupMenu.appearance;
     
     self.shadowOffset = self.popupMenu.shadowEnabled ? LK_POPUP_MENU_SHADOW_OFFSET : 0;
-    if (self.popupMenu.triangleEnabled) {
-        self.triangleSize = CGSizeMake(LK_POPUP_MENU_TRIANGLE_LONG, LK_POPUP_MENU_TRIANGLE_SHORT);
-    } else {
-        self.triangleSize = CGSizeZero;
-    }
+    self.triangleSize = CGSizeMake(LK_POPUP_MENU_TRIANGLE_LONG, LK_POPUP_MENU_TRIANGLE_SHORT);
 
     if (title && [[title stringByTrimmingCharactersInSet:
                    [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
@@ -247,23 +380,23 @@
     CGFloat menuX, menuY;    
     switch (self.popupMenu.arrangementMode) {
         case LKPopupMenuArrangementModeUp:
-            menuX = self.location.x - menuWidth/2.0;
-            menuY = self.location.y - menuHeight;
+            menuX = location.x - menuWidth/2.0;
+            menuY = location.y - menuHeight;
             break;
             
         case LKPopupMenuArrangementModeDown:
-            menuX = self.location.x - menuWidth/2.0;
-            menuY = self.location.y;
+            menuX = location.x - menuWidth/2.0;
+            menuY = location.y;
             break;
             
         case LKPopupMenuArrangementModeRight:
-            menuX = self.location.x;
-            menuY = self.location.y - menuHeight/2.0;
+            menuX = location.x;
+            menuY = location.y - menuHeight/2.0;
             break;
             
         case LKPopupMenuArrangementModeLeft:
-            menuX = self.location.x - menuWidth;
-            menuY = self.location.y - menuHeight/2.0;
+            menuX = location.x - menuWidth;
+            menuY = location.y - menuHeight/2.0;
             break;
     }
 
@@ -333,7 +466,13 @@
     menuX = floor(menuX + 0.5);
     menuY = floor(menuY + 0.5);
 
-    CGRect frame = CGRectMake(menuX, menuY, menuWidth, menuHeight);
+    CGRect frame;
+    
+    if (type == LKPopupMenuViewTypeBase) {
+        frame = CGRectMake(menuX, menuY, menuWidth, menuHeight);
+    } else if (type == LKPopupMenuViewTypeFrame) {
+        frame = CGRectMake(0, 0, menuWidth, menuHeight);
+    }
 
     self = [super initWithFrame:frame];
     if (self) {
@@ -357,45 +496,69 @@
         }
 
         self.tableFrame = CGRectMake(tableX, tableY, listWidth, listHeight);
-        self.tableView = [[[UITableView alloc] initWithFrame:self.tableFrame
-                                                       style:UITableViewStylePlain] autorelease];
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.tableView.showsVerticalScrollIndicator = YES;
-        self.tableView.indicatorStyle = appearance.indicatorStyle;
-        self.tableView.bounces = NO;
-        
-        self.tableView.backgroundColor = [UIColor clearColor];
-        CALayer* layer = self.tableView.layer;
-        layer.masksToBounds = YES;
-        layer.cornerRadius = 5.0;
-        
-        if (title && [[title stringByTrimmingCharactersInSet:
-                       [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
-            UIView* view = [[[UIView alloc] initWithFrame:
-                             CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
-            view.backgroundColor = [UIColor clearColor];
-            UILabel* titleLabel = [[[UILabel alloc] initWithFrame:
-                                    CGRectMake(1.5, 1.5, self.tableView.frame.size.width-3, self.titleHeight-1.5)] autorelease];
-            titleLabel.adjustsFontSizeToFitWidth = YES;
-            titleLabel.font = [UIFont boldSystemFontOfSize:appearance.fontSize];
-            titleLabel.textColor = appearance.titleTextColor;
-            titleLabel.backgroundColor = appearance.titleBackgroundColor;   
-            titleLabel.minimumFontSize = appearance.fontSize;
+
+        if (type == LKPopupMenuViewTypeBase) {
+            // setup table        
+            self.tableView = [[[UITableView alloc] initWithFrame:self.tableFrame
+                                                           style:UITableViewStylePlain] autorelease];
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            self.tableView.showsVerticalScrollIndicator = YES;
+            self.tableView.indicatorStyle = appearance.indicatorStyle;
+            self.tableView.bounces = NO;
             
-            titleLabel.text = title;
-            [view addSubview:titleLabel];
-            self.tableView.tableHeaderView = view;
+            self.tableView.backgroundColor = [UIColor clearColor];
+            CALayer* layer = self.tableView.layer;
+            layer.masksToBounds = YES;
+            layer.cornerRadius = 5.0;
+            
+            // setup header
+            if (title && [[title stringByTrimmingCharactersInSet:
+                           [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
+                UIView* view = [[[UIView alloc] initWithFrame:
+                                 CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
+                view.backgroundColor = [UIColor clearColor];
+                UILabel* titleLabel = [[[UILabel alloc] initWithFrame:
+                                        CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
+                titleLabel.adjustsFontSizeToFitWidth = YES;
+                titleLabel.font = [UIFont boldSystemFontOfSize:appearance.fontSize];
+                titleLabel.textColor = appearance.titleTextColor;
+                titleLabel.backgroundColor = appearance.titleBackgroundColor;   
+                titleLabel.minimumFontSize = appearance.fontSize;
+                
+                titleLabel.text = title;
+                [view addSubview:titleLabel];
+                self.tableView.tableHeaderView = view;
+            }
+
+            self.tableView.dataSource = popupMenu;
+            self.tableView.delegate = popupMenu;
+
+            [self addSubview:self.tableView];
+
+        } else if (type ==LKPopupMenuViewTypeFrame) {
+            self.userInteractionEnabled = NO;
         }
-
-        self.tableView.dataSource = popupMenu;
-        self.tableView.delegate = popupMenu;
-
-        [self addSubview:self.tableView];
 
         // setup basics
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
+}
+
+- (id)initAsFrameWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+{
+    return [self _initAsType:LKPopupMenuViewTypeFrame
+               WithPopupMenu:popupMenu
+                    location:location
+                       title:title];
+}
+
+- (id)initAsBaseWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+{
+    return [self _initAsType:LKPopupMenuViewTypeBase
+               WithPopupMenu:popupMenu
+                    location:location
+                       title:title];
 }
 
 - (void)dealloc {
@@ -404,6 +567,7 @@
         [self.tableView removeFromSuperview];
     }
     self.tableView = nil;
+    self.path = nil;
     [super dealloc];
 }
 
@@ -412,159 +576,23 @@
     [self.tableView reloadData];
 }
 
-#define LK_POPUP_MENU_RADIUS    5.0
 
 - (void)drawRect:(CGRect)rect
 {
-//    UIBezierPath* path = [UIBezierPath bezierPathWithRoundedRect:self.tableFrame cornerRadius:5.0];
-    UIBezierPath* path = [UIBezierPath bezierPath];
-    path.lineJoinStyle = kCGLineJoinRound;
-
-    CGPoint p = self.tableFrame.origin;
-    CGPoint tp = [self convertPoint:self.location fromView:self.superview];
-
-    p.x += LK_POPUP_MENU_RADIUS;
-    [path moveToPoint:p];
-
-    // upper
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown) {
-        p.x = tp.x - self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x += self.triangleSize.width/2.0;
-        p.y -= self.triangleSize.height;
-        [path addLineToPoint:p];
-        p.x += self.triangleSize.width/2.0;
-        p.y += self.triangleSize.height;
-        [path addLineToPoint:p];
-        p.x = self.tableFrame.origin.x + self.tableFrame.size.width - LK_POPUP_MENU_RADIUS;
-        [path addLineToPoint:p];
-    } else {
-        p.x += self.tableFrame.size.width - LK_POPUP_MENU_RADIUS*2;
-        [path addLineToPoint:p];
-    }
-
-    // upper right
-    p.y += LK_POPUP_MENU_RADIUS;
-    [path addArcWithCenter:p
-                    radius:LK_POPUP_MENU_RADIUS
-                startAngle:-1.0*M_PI/2.0
-                  endAngle:0.0*M_PI/2.0
-                 clockwise:YES];
-
-    // right
-    p.x += LK_POPUP_MENU_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeLeft) {
-        p.y = tp.y - self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x += self.triangleSize.height;
-        p.y += self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x -= self.triangleSize.height;
-        p.y += self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.y = self.tableFrame.origin.y + self.tableFrame.size.height - LK_POPUP_MENU_RADIUS;
-        [path addLineToPoint:p];
-    } else {
-        p.y += self.tableFrame.size.height - LK_POPUP_MENU_RADIUS*2;
-        [path addLineToPoint:p];
-    }
-
-    // lower right
-    p.x -= LK_POPUP_MENU_RADIUS;    
-    [path addArcWithCenter:p
-                    radius:LK_POPUP_MENU_RADIUS
-                startAngle:0.0*M_PI/2.0
-                  endAngle:1.0*M_PI/2.0
-                 clockwise:YES];
-
-    // lower
-    p.y += LK_POPUP_MENU_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeUp) {
-        p.x = tp.x + self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x -= self.triangleSize.width/2.0;
-        p.y += self.triangleSize.height;
-        [path addLineToPoint:p];
-        p.x -= self.triangleSize.width/2.0;
-        p.y -= self.triangleSize.height;
-        [path addLineToPoint:p];
-        p.x = self.tableFrame.origin.x + LK_POPUP_MENU_RADIUS;
-        [path addLineToPoint:p];
-    } else {
-        p.x -= self.tableFrame.size.width - LK_POPUP_MENU_RADIUS*2;
-        [path addLineToPoint:p];
-    }
-
-    // lower left
-    p.y -= LK_POPUP_MENU_RADIUS;
-    [path addArcWithCenter:p
-                    radius:LK_POPUP_MENU_RADIUS
-                startAngle:1.0*M_PI/2.0
-                  endAngle:2.0*M_PI/2.0
-                 clockwise:YES];
-
-    // left
-    p.x -= LK_POPUP_MENU_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeRight) {
-        p.y = tp.y + self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x -= self.triangleSize.height;
-        p.y -= self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.x += self.triangleSize.height;
-        p.y -= self.triangleSize.width/2.0;
-        [path addLineToPoint:p];
-        p.y = self.tableFrame.origin.y + LK_POPUP_MENU_RADIUS;
-        [path addLineToPoint:p];
-    } else {
-        p.y -= self.tableFrame.size.height - LK_POPUP_MENU_RADIUS*2;
-        [path addLineToPoint:p];
-    }
-    
-    // upper left
-    p.x += LK_POPUP_MENU_RADIUS;
-    [path addArcWithCenter:p
-                    radius:LK_POPUP_MENU_RADIUS
-                startAngle:2.0*M_PI/2.0
-                  endAngle:3.0*M_PI/2.0
-                 clockwise:YES];
-    [path closePath];
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.5] CGColor];
-/*    
-    UIBezierPath* trianglePath = [self _triangleBezierPath];
-
-    
-    if (self.popupMenu.triangleEnabled) {
-        if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown && self.titleHeight) {
-            [self.popupMenu.appearance.titleBackgroundColor setFill];
-            
-            CGContextSaveGState(context);
-            CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
-            [trianglePath fill];
-            CGContextRestoreGState(context);
-
-        } else {
-            [path appendPath:trianglePath];
-        }
-    }
-*/
-    [self.popupMenu.appearance.menuBackgroundColor setFill];
-
-    CGContextSaveGState(context);
-    CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
-    [path fill];
-    CGContextRestoreGState(context);
-
-    if (self.popupMenu.outlineEnabled) {
+    if (self.type == LKPopupMenuViewTypeBase) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.5] CGColor];
+        CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
+        [self.popupMenu.appearance.menuBackgroundColor setFill];
+        [self.path fill];
+        
+    } else if (self.type == LKPopupMenuViewTypeFrame) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.25] CGColor];
+        CGContextSetShadowWithColor(context,CGSizeMake(1, 1), 1, shadowColor);
         [self.popupMenu.appearance.outlineColor setStroke];
-        [path setLineWidth:2.0];
-        [path stroke];
+        [self.path setLineWidth:self.popupMenu.appearance.outlineWith];
+        [self.path stroke];
     }
 }
 
@@ -614,10 +642,6 @@
     [path stroke];
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-{
-    NSLog(@"%s|%@", __PRETTY_FUNCTION__, nil);
-}
 - (void)dealloc {
     self.color = nil;
     [super dealloc];
@@ -717,8 +741,7 @@
 @synthesize separatorEnabled = separatorEnabled_;
 @synthesize outlineEnabled = outlineEnabled_;
 
-@synthesize popupMenuView = popupMenuView_;
-
+@synthesize popupMenuBaseView = popupMenuBaseView_;
 @synthesize backgroundView = backgroundView_;
 
 
@@ -752,10 +775,10 @@
     self.textList = nil;
     self.imageFilenameList = nil;
     self.delegate = nil;
-    if (self.popupMenuView) {
-        [self.popupMenuView removeFromSuperview];
+    if (self.popupMenuBaseView) {
+        [self.popupMenuBaseView removeFromSuperview];
     }
-    self.popupMenuView = nil;
+    self.popupMenuBaseView = nil;
     self.parentView = nil;
     self.title = nil;
 
@@ -805,17 +828,16 @@
         [self.delegate willAppearPopupMenu:self];
     }
 
-    if (self.popupMenuView) {
-        [self.popupMenuView removeFromSuperview];
-        self.popupMenuView = nil;
+    if (self.popupMenuBaseView) {
+        [self.popupMenuBaseView removeFromSuperview];
+        self.popupMenuBaseView = nil;
     }
     
     // create new popup mewnu view
-    NSString* title = self.title ? [@" " stringByAppendingString:self.title] : nil;
-    self.popupMenuView = [[[LKPopupMenuView alloc] initWithPopupMenu:self
-                                                            Location:location
-                                                               title:title
-                           ] autorelease];
+    NSString* title = self.title ? [@"  " stringByAppendingString:self.title] : nil;
+    self.popupMenuBaseView = [[[LKPopupMenuView alloc] initAsBaseWithPopupMenu:self
+                                                                      location:location
+                                                                         title:title] autorelease];
 
     if (self.modalEnabled) {
         self.backgroundView = [[[LKPopupBackgroundView alloc] initWithFrame:self.parentView.bounds] autorelease];
@@ -823,48 +845,59 @@
         [self.parentView addSubview:self.backgroundView];
     }
     
-    [self.parentView addSubview:self.popupMenuView];
+    [self.parentView addSubview:self.popupMenuBaseView];
+    CGPoint p = [self.popupMenuBaseView convertPoint:location fromView:self.parentView];
+    [self.popupMenuBaseView setupPathAtLocation:p];
+    
+    if (self.outlineEnabled) {
+        LKPopupMenuView* frameView = [[[LKPopupMenuView alloc] initAsFrameWithPopupMenu:self
+                                                                               location:location
+                                                                                  title:title] autorelease];
+        [self.popupMenuBaseView addSubview:frameView];
+        [frameView setupPathAtLocation:p];
+    }
+
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 
     if (self.animationMode != LKPopupMenuAnimationModeNone) {
 
-        CGAffineTransform t1 = self.popupMenuView.transform;
-        CGAffineTransform t2 = self.popupMenuView.transform;
-        CGSize viewSize = self.popupMenuView.frame.size;
+        CGAffineTransform t1 = self.popupMenuBaseView.transform;
+        CGAffineTransform t2 = self.popupMenuBaseView.transform;
+        CGSize viewSize = self.popupMenuBaseView.frame.size;
         
         if (self.animationMode == LKPopupMenuAnimationModeSlide) {
             switch (self.arrangementMode) {
                 case LKPopupMenuArrangementModeUp:
                     t1 = CGAffineTransformTranslate(t1, 0, viewSize.height/2.0);
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
                     break;
 
                 case LKPopupMenuArrangementModeDown:
                     t1 = CGAffineTransformTranslate(t1, 0, -viewSize.height/2.0);
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
                     break;
                     
                 case LKPopupMenuArrangementModeRight:
                     t1 = CGAffineTransformTranslate(t1, -viewSize.width/2.0, 0);
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
                     break;
 
                 case LKPopupMenuArrangementModeLeft:
                     t1 = CGAffineTransformTranslate(t1, viewSize.width/2.0, 0);
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
                     break;
             }
-            self.popupMenuView.alpha = 0.5;
-            self.popupMenuView.tableView.alpha = 0.0;
+            self.popupMenuBaseView.alpha = 0.5;
+            self.popupMenuBaseView.tableView.alpha = 0.0;
             [UIView animateWithDuration:0.15
                              animations:^{
-                                 self.popupMenuView.transform = t2;
-                                 self.popupMenuView.alpha = 1.0;
+                                 self.popupMenuBaseView.transform = t2;
+                                 self.popupMenuBaseView.alpha = 1.0;
                              }
                              completion:^(BOOL finished) {
                                  [UIView animateWithDuration:0.1
                                                   animations:^{
-                                                      self.popupMenuView.tableView.alpha = 1.0;
+                                                      self.popupMenuBaseView.tableView.alpha = 1.0;
                                                   }];
                              }];
 
@@ -872,32 +905,32 @@
             switch (self.arrangementMode) {
                 case LKPopupMenuArrangementModeUp:
                 case LKPopupMenuArrangementModeDown:
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
                     break;
                     
                 case LKPopupMenuArrangementModeRight:
                 case LKPopupMenuArrangementModeLeft:
-                    self.popupMenuView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
                     break;
             }
-            self.popupMenuView.alpha = 0.5;
-            self.popupMenuView.tableView.alpha = 0.0;
+            self.popupMenuBaseView.alpha = 0.5;
+            self.popupMenuBaseView.tableView.alpha = 0.0;
             [UIView animateWithDuration:0.15
                              animations:^{
-                                 self.popupMenuView.transform = t2;
-                                 self.popupMenuView.alpha = 1.0;
+                                 self.popupMenuBaseView.transform = t2;
+                                 self.popupMenuBaseView.alpha = 1.0;
                              }
                              completion:^(BOOL finished) {
                                  [UIView animateWithDuration:0.1
                                                   animations:^{
-                                                      self.popupMenuView.tableView.alpha = 1.0;
+                                                      self.popupMenuBaseView.tableView.alpha = 1.0;
                                                   }];
             }];
 
         } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
-            self.popupMenuView.alpha = 0.0;
+            self.popupMenuBaseView.alpha = 0.0;
             [UIView animateWithDuration:0.2 animations:^{
-                self.popupMenuView.alpha = 1.0;
+                self.popupMenuBaseView.alpha = 1.0;
             }];            
         }
     }    
@@ -919,17 +952,17 @@
         [self.delegate willDisappearPopupMenu:self];
     }
 
-    CGAffineTransform t = self.popupMenuView.transform;
-    CGSize viewSize = self.popupMenuView.frame.size;
+    CGAffineTransform t = self.popupMenuBaseView.transform;
+    CGSize viewSize = self.popupMenuBaseView.frame.size;
     [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 
     if (self.animationMode == LKPopupMenuAnimationModeNone) {
-        self.popupMenuView.hidden = YES;
+        self.popupMenuBaseView.hidden = YES;
 
     } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
         [UIView animateWithDuration:0.2
                          animations:^{
-                             self.popupMenuView.alpha = 0.0;
+                             self.popupMenuBaseView.alpha = 0.0;
                          }];
 
     } else if (self.animationMode == LKPopupMenuAnimationModeSlide) {
@@ -955,12 +988,12 @@
                 break;
         }
         
-        self.popupMenuView.tableView.hidden = YES;
+        self.popupMenuBaseView.tableView.hidden = YES;
         [UIView animateWithDuration:0.2 animations:^{
-            self.popupMenuView.transform = t;
-            self.popupMenuView.alpha = 0.25;
+            self.popupMenuBaseView.transform = t;
+            self.popupMenuBaseView.alpha = 0.25;
         } completion:^(BOOL finished){
-            self.popupMenuView.hidden = YES;
+            self.popupMenuBaseView.hidden = YES;
         }];
         
     } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
@@ -976,12 +1009,12 @@
                 break;
         }
         
-        self.popupMenuView.tableView.hidden = YES;
+        self.popupMenuBaseView.tableView.hidden = YES;
         [UIView animateWithDuration:0.2 animations:^{
-            self.popupMenuView.transform = t;
-            self.popupMenuView.alpha = 0.25;
+            self.popupMenuBaseView.transform = t;
+            self.popupMenuBaseView.alpha = 0.25;
         } completion:^(BOOL finished){
-            self.popupMenuView.hidden = YES;
+            self.popupMenuBaseView.hidden = YES;
         }];
     }
 }
@@ -1040,7 +1073,7 @@
         if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
             [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];
         }
-        [self.popupMenuView reloadData];
+        [self.popupMenuBaseView reloadData];
     }
 }
 

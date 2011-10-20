@@ -83,6 +83,7 @@ typedef enum {
 @property (nonatomic, assign) CGFloat fontSize;
 @property (nonatomic, assign) CGFloat listWidth;
 @property (nonatomic, assign) CGFloat listHeight;
+@property (nonatomic, assign) CGFloat outlineWith;
 
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize;
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor;

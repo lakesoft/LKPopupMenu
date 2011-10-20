@@ -9,7 +9,7 @@
 #import "LKPopupMenuViewController.h"
 #import "LKPopupMenu.h"
 
-#define MENU_NUM    16
+#define MENU_NUM    6
 
 @implementation LKPopupMenuViewController
 @synthesize popupMenu = popupMenu_;
@@ -191,7 +191,7 @@
         self.colorMenu.title = @"Menu Color";
         self.colorMenu.arrangementMode = LKPopupMenuArrangementModeUp;
         self.colorMenu.triangleEnabled = YES;    
-        self.colorMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:0];
+        self.colorMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:self.menuColor];
         [self.colorMenu showAtLocation:location];
     }
 }
