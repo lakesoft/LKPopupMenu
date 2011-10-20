@@ -31,6 +31,7 @@
 @property (nonatomic, assign) BOOL triangleEnabled;
 @property (nonatomic, assign) BOOL modalEnabled;
 @property (nonatomic, assign) BOOL separatorEnabled;
+@property (nonatomic, assign) BOOL outlineEnabled;
 
 @property (nonatomic, assign) LKPopupMenuSize menuSize;
 @property (nonatomic, assign) LKPopupMenuColor menuColor;
@@ -49,6 +50,7 @@
 - (IBAction)didChangeAnimationMode:(id)sender;
 - (IBAction)didChangeModal:(id)sender;
 - (IBAction)didChangeSeparator:(id)sender;
+- (IBAction)didChangeOutline:(id)sender;
 - (IBAction)openImageMenu:(id)sender;
 
 @end

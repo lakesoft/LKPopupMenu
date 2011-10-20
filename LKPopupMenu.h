@@ -74,6 +74,7 @@ typedef enum {
 @property (nonatomic, retain) UIColor* titleTextColor;
 @property (nonatomic, retain) UIColor* checkMarkColor;
 @property (nonatomic, retain) UIColor* separatorColor;
+@property (nonatomic, retain) UIColor* outlineColor;
 @property (nonatomic, assign) UIScrollViewIndicatorStyle indicatorStyle;
 
 // size
@@ -117,6 +118,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL triangleEnabled;
 @property (nonatomic, assign) BOOL separatorEnabled;
+@property (nonatomic, assign) BOOL outlineEnabled;
 
 // API
 + (LKPopupMenu*)popupMenuOnView:(UIView*)parentView;

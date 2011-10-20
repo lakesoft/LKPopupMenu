@@ -9,6 +9,8 @@
 #import "LKPopupMenuViewController.h"
 #import "LKPopupMenu.h"
 
+#define MENU_NUM    16
+
 @implementation LKPopupMenuViewController
 @synthesize popupMenu = popupMenu_;
 @synthesize sizeMenu = sizeMenu_;
@@ -26,6 +28,7 @@
 @synthesize animationMode;
 @synthesize modalEnabled;
 @synthesize separatorEnabled;
+@synthesize outlineEnabled;
 
 - (void)didReceiveMemoryWarning
 {
@@ -42,7 +45,7 @@
 {
     [super viewDidLoad];
     NSMutableArray* array = [NSMutableArray array];
-    for (int i=0; i < 6; i++) {
+    for (int i=0; i < MENU_NUM; i++) {
         [array addObject:[NSString stringWithFormat:@"Menu Item %d", i+1]];
     }
     self.list = array;
@@ -54,6 +57,7 @@
     self.animationMode = LKPopupMenuAnimationModeSlide;
     self.modalEnabled = YES;
     self.separatorEnabled = YES;
+    self.outlineEnabled = YES;
 }
 
 - (void)dealloc {
@@ -124,7 +128,6 @@
             self.popupMenu = [LKPopupMenu popupMenuOnView:self.view];
             self.popupMenu.textList = self.list;
             self.popupMenu.delegate = self;
-//            self.popupMenu.fixedHeight = 140.0;
         }
         self.popupMenu.title = self.menuTitle.text;
         self.popupMenu.heightSizeMode = self.sizeMode;
@@ -135,11 +138,13 @@
         self.popupMenu.triangleEnabled = self.triangleEnabled;
         self.popupMenu.modalEnabled = self.modalEnabled;
         self.popupMenu.separatorEnabled = self.separatorEnabled;
+        self.popupMenu.outlineEnabled = self.outlineEnabled;
         self.popupMenu.appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
                                                                                color:self.menuColor];
 
-        // TODO
-//        self.popupMenu.appearance.tableSize = CGSizeMake(500, 500);;
+// test auto resizing
+//        self.popupMenu.appearance.listWidth = 1000.0;
+//        self.popupMenu.appearance.listHeight = 1000.0;
 
         [self.popupMenu showAtLocation:location];
     }
@@ -292,9 +297,15 @@
         self.imageMenu.triangleEnabled = self.triangleEnabled;
         self.imageMenu.modalEnabled = self.modalEnabled;
         self.imageMenu.separatorEnabled = self.separatorEnabled;
+        self.imageMenu.outlineEnabled = self.outlineEnabled;
 
         [self.imageMenu showAtLocation:location];
     }
+}
+
+- (IBAction)didChangeOutline:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.outlineEnabled = sw.on;
 }
 
 - (IBAction)popupToDown:(id)sender {
