@@ -120,6 +120,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL triangleEnabled;
 @property (nonatomic, assign) BOOL separatorEnabled;
 @property (nonatomic, assign) BOOL outlineEnabled;
+@property (nonatomic, assign) BOOL titleHighlighted;
 
 // API
 + (LKPopupMenu*)popupMenuOnView:(UIView*)parentView;

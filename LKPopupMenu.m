@@ -76,7 +76,7 @@
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
             appearance.titleTextColor = [UIColor whiteColor];
             appearance.checkMarkColor = [UIColor whiteColor];
-            appearance.separatorColor = [UIColor colorWithWhite:0.4 alpha:0.9];
+            appearance.separatorColor = [UIColor colorWithWhite:0.5 alpha:0.9];
             appearance.outlineColor   = [UIColor whiteColor];
             appearance.indicatorStyle = UIScrollViewIndicatorStyleWhite;            
             break;
@@ -85,10 +85,10 @@
             appearance.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
             appearance.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
             appearance.menuHilightedColor = [UIColor colorWithWhite:0.75 alpha:1.0];
-            appearance.titleBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.95];
-            appearance.titleTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
+            appearance.titleBackgroundColor = [UIColor colorWithWhite:0.85 alpha:0.95];
+            appearance.titleTextColor = [UIColor colorWithWhite:0.35 alpha:1.0];
             appearance.checkMarkColor = [UIColor darkGrayColor];
-            appearance.separatorColor = [UIColor colorWithWhite:0.75 alpha:1.0];
+            appearance.separatorColor = [UIColor colorWithWhite:1.0 alpha:1.0];
             appearance.outlineColor   = [UIColor whiteColor];
             appearance.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             break;
@@ -133,10 +133,12 @@
             
 @end
 
-//------------------------------------------------------------------------------
+
 @class LKPopupMenuView;
 @class LKPopupBackgroundView;
+//==============================================================================
 @interface LKPopupMenu() <UITableViewDelegate, UITableViewDataSource>
+//==============================================================================
 
 @property (nonatomic, assign) UIView* parentView;
 @property (nonatomic, retain) LKPopupMenuView* popupMenuBaseView;
@@ -148,6 +150,7 @@
 
 //------------------------------------------------------------------------------
 @interface LKPopupBackgroundView : UIView
+//------------------------------------------------------------------------------
 @property (nonatomic, assign) LKPopupMenu* popupMenu;
 @end
 @implementation LKPopupBackgroundView
@@ -165,11 +168,86 @@
 }
 @end
 
+
+//==============================================================================
+@interface LKPopupMenuTitleView : UIView
+//==============================================================================
+@property (nonatomic, assign) CATextLayer* textLayer;
+@property (nonatomic, assign) CAGradientLayer* gradientLayer;
+- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenu*)popupMenu;
+@end
+
 //------------------------------------------------------------------------------
+@implementation LKPopupMenuTitleView
+//------------------------------------------------------------------------------
+#define LK_POPUP_MENU_PADDING_X     10.0
+
+@synthesize textLayer = textLayer_;
+@synthesize gradientLayer = gradientLayer_;
+
+- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenu*)popupMenu
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // setup basics
+        self.backgroundColor = popupMenu.appearance.titleBackgroundColor;
+                
+        // setup gradient layer
+        if (popupMenu.titleHighlighted) {
+            self.gradientLayer = [CAGradientLayer layer];
+            self.gradientLayer.frame = self.bounds;
+            self.gradientLayer.locations = [NSArray arrayWithObjects:
+                                            [NSNumber numberWithFloat:0.0],
+                                            [NSNumber numberWithFloat:0.5],
+                                            [NSNumber numberWithFloat:0.5],
+                                            [NSNumber numberWithFloat:1.0],
+                                            nil];
+            self.gradientLayer.colors =
+                [NSArray arrayWithObjects:
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.6].CGColor,
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.4].CGColor,
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.3].CGColor,
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor,
+                 nil];
+
+            [self.layer addSublayer:self.gradientLayer];
+        }
+        
+        // setup text layer
+        self.textLayer = [CATextLayer layer];
+        
+        self.textLayer.string = popupMenu.title;
+        UIFont* font = [UIFont boldSystemFontOfSize:popupMenu.appearance.fontSize];
+        CGSize textSize = [popupMenu.title sizeWithFont:font];
+        self.textLayer.frame = CGRectMake(LK_POPUP_MENU_PADDING_X,
+                                          (self.frame.size.height - textSize.height)/2.0 + 3,
+                                          self.frame.size.width - LK_POPUP_MENU_PADDING_X*2,
+                                          textSize.height);
+        self.textLayer.font = CGFontCreateWithFontName((CFStringRef)font.fontName);
+        self.textLayer.fontSize = popupMenu.appearance.fontSize;
+        self.textLayer.foregroundColor = popupMenu.appearance.titleTextColor.CGColor;
+        self.textLayer.truncationMode = kCATruncationEnd;
+        self.textLayer.alignmentMode = kCAAlignmentLeft;
+        [self.layer addSublayer:self.textLayer];
+        
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+@end
+
+
+
+//==============================================================================
+@interface LKPopupMenuView : UIView
+//==============================================================================
 #define LK_POPUP_MENU_PADDING   2.0
 #define LK_POPUP_MENU_MARGIN    2.0
-#define LK_POPUP_MENU_TRIANGLE_LONG          16.0
-#define LK_POPUP_MENU_TRIANGLE_SHORT         10.0
+#define LK_POPUP_MENU_TRIANGLE_LONG          22.0
+#define LK_POPUP_MENU_TRIANGLE_SHORT         14.0
 
 #define LK_POPUP_MENU_SHADOW_OFFSET 2.5
 #define LK_POPUP_MENU_CORNER_RADIUS    5.0
@@ -179,7 +257,6 @@ typedef enum {
     LKPopupMenuViewTypeFrame
 } LKPopupMenuViewType;
 
-@interface LKPopupMenuView : UIView
 @property (nonatomic, assign) LKPopupMenu* popupMenu;
 @property (nonatomic, assign) UITableView* tableView;
 @property (nonatomic, assign) CGRect tableFrame;
@@ -196,7 +273,10 @@ typedef enum {
 
 @end
 
+
+//------------------------------------------------------------------------------
 @implementation LKPopupMenuView
+//------------------------------------------------------------------------------
 @synthesize popupMenu = popupMenu_;
 @synthesize tableView = tableView_;
 @synthesize tableFrame = tableFrame_;
@@ -514,19 +594,9 @@ typedef enum {
             // setup header
             if (title && [[title stringByTrimmingCharactersInSet:
                            [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
-                UIView* view = [[[UIView alloc] initWithFrame:
-                                 CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
-                view.backgroundColor = [UIColor clearColor];
-                UILabel* titleLabel = [[[UILabel alloc] initWithFrame:
-                                        CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)] autorelease];
-                titleLabel.adjustsFontSizeToFitWidth = YES;
-                titleLabel.font = [UIFont boldSystemFontOfSize:appearance.fontSize];
-                titleLabel.textColor = appearance.titleTextColor;
-                titleLabel.backgroundColor = appearance.titleBackgroundColor;   
-                titleLabel.minimumFontSize = appearance.fontSize;
-                
-                titleLabel.text = title;
-                [view addSubview:titleLabel];
+                LKPopupMenuTitleView* view = [[[LKPopupMenuTitleView alloc] initWithFrame:
+                                 CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)
+                                               popupMenu:popupMenu] autorelease];
                 self.tableView.tableHeaderView = view;
             }
 
@@ -582,14 +652,14 @@ typedef enum {
     if (self.type == LKPopupMenuViewTypeBase) {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.5] CGColor];
-        CGContextSetShadowWithColor(context,CGSizeMake(self.shadowOffset, self.shadowOffset), self.shadowOffset, shadowColor);
+        CGContextSetShadowWithColor(context,CGSizeMake(0, 0), self.shadowOffset, shadowColor);
         [self.popupMenu.appearance.menuBackgroundColor setFill];
         [self.path fill];
         
     } else if (self.type == LKPopupMenuViewTypeFrame) {
         CGContextRef context = UIGraphicsGetCurrentContext();
-        CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.25] CGColor];
-        CGContextSetShadowWithColor(context,CGSizeMake(1, 1), 1, shadowColor);
+        CGColorRef shadowColor = [[UIColor colorWithWhite:0.0 alpha:0.35] CGColor];
+        CGContextSetShadowWithColor(context,CGSizeMake(1, 1), 2, shadowColor);
         [self.popupMenu.appearance.outlineColor setStroke];
         [self.path setLineWidth:self.popupMenu.appearance.outlineWith];
         [self.path stroke];
@@ -703,7 +773,16 @@ typedef enum {
         [path moveToPoint:p];
         p.x += self.bounds.size.width - 1.0;
         [path addLineToPoint:p];
-
+        [path setLineWidth:0.5];
+        [[UIColor blackColor] setStroke];
+        [path stroke];
+        
+        path = [UIBezierPath bezierPath];
+        p = CGPointMake(0, 0.5);
+        [path moveToPoint:p];
+        p.x += self.bounds.size.width - 1.0;
+        [path addLineToPoint:p];
+        [path setLineWidth:0.5];
         [self.appearance.separatorColor setStroke];
         [path stroke];
     }    
@@ -740,6 +819,7 @@ typedef enum {
 @synthesize triangleEnabled = triangleEnabled_;
 @synthesize separatorEnabled = separatorEnabled_;
 @synthesize outlineEnabled = outlineEnabled_;
+@synthesize titleHighlighted = titleHighlighted_;
 
 @synthesize popupMenuBaseView = popupMenuBaseView_;
 @synthesize backgroundView = backgroundView_;
@@ -761,6 +841,7 @@ typedef enum {
         self.triangleEnabled = YES;
         self.separatorEnabled = YES;
         self.outlineEnabled = YES;
+        self.titleHighlighted = YES;
         self.selectedIndexSet = [NSMutableIndexSet indexSet];
         self.modalEnabled = YES;
         self.separatorEnabled = YES;

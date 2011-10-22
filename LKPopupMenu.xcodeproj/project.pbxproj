@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C53AD3F1452E72C0074C034 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C53AD3E1452E72C0074C034 /* QuartzCore.framework */; };
 		4C58377E144CFBB60012E20E /* Weather Cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C583776144CFBB60012E20E /* Weather Cloud@2x.png */; };
 		4C583780144CFBB60012E20E /* Weather Clouds@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C583778144CFBB60012E20E /* Weather Clouds@2x.png */; };
 		4C583781144CFBB60012E20E /* Weather Cloudy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C583779144CFBB60012E20E /* Weather Cloudy@2x.png */; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C53AD3E1452E72C0074C034 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4C583776144CFBB60012E20E /* Weather Cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Weather Cloud@2x.png"; sourceTree = "<group>"; };
 		4C583778144CFBB60012E20E /* Weather Clouds@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Weather Clouds@2x.png"; sourceTree = "<group>"; };
 		4C583779144CFBB60012E20E /* Weather Cloudy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Weather Cloudy@2x.png"; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C53AD3F1452E72C0074C034 /* QuartzCore.framework in Frameworks */,
 				4CD6F8C614410CD20056F111 /* UIKit.framework in Frameworks */,
 				4CD6F8C814410CD20056F111 /* Foundation.framework in Frameworks */,
 				4CD6F8CA14410CD20056F111 /* CoreGraphics.framework in Frameworks */,
@@ -126,6 +129,7 @@
 		4CD6F8B614410CD10056F111 = {
 			isa = PBXGroup;
 			children = (
+				4C53AD3E1452E72C0074C034 /* QuartzCore.framework */,
 				4CD6F8FF14410CF30056F111 /* LKPopupMenu */,
 				4CD6F8CB14410CD20056F111 /* Sample Application */,
 				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,

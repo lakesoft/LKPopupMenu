@@ -29,6 +29,7 @@
 @synthesize modalEnabled;
 @synthesize separatorEnabled;
 @synthesize outlineEnabled;
+@synthesize titleHilighted;
 
 - (void)didReceiveMemoryWarning
 {
@@ -58,6 +59,7 @@
     self.modalEnabled = YES;
     self.separatorEnabled = YES;
     self.outlineEnabled = YES;
+    self.titleHilighted = YES;
 }
 
 - (void)dealloc {
@@ -139,6 +141,7 @@
         self.popupMenu.modalEnabled = self.modalEnabled;
         self.popupMenu.separatorEnabled = self.separatorEnabled;
         self.popupMenu.outlineEnabled = self.outlineEnabled;
+        self.popupMenu.titleHighlighted = self.titleHilighted;
         self.popupMenu.appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
                                                                                color:self.menuColor];
 
@@ -298,9 +301,15 @@
         self.imageMenu.modalEnabled = self.modalEnabled;
         self.imageMenu.separatorEnabled = self.separatorEnabled;
         self.imageMenu.outlineEnabled = self.outlineEnabled;
+        self.imageMenu.titleHighlighted = self.titleHilighted;
 
         [self.imageMenu showAtLocation:location];
     }
+}
+
+- (IBAction)didChangeTitleHighlighted:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.titleHilighted = sw.on;
 }
 
 - (IBAction)didChangeOutline:(id)sender {

@@ -32,6 +32,7 @@
 @property (nonatomic, assign) BOOL modalEnabled;
 @property (nonatomic, assign) BOOL separatorEnabled;
 @property (nonatomic, assign) BOOL outlineEnabled;
+@property (nonatomic, assign) BOOL titleHilighted;
 
 @property (nonatomic, assign) LKPopupMenuSize menuSize;
 @property (nonatomic, assign) LKPopupMenuColor menuColor;
@@ -52,5 +53,6 @@
 - (IBAction)didChangeSeparator:(id)sender;
 - (IBAction)didChangeOutline:(id)sender;
 - (IBAction)openImageMenu:(id)sender;
+- (IBAction)didChangeTitleHighlighted:(id)sender;
 
 @end
