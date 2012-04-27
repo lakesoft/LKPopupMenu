@@ -8,25 +8,27 @@
 
 #import <UIKit/UIKit.h>
 
-#import "LKPopupMenu.h"
+#import "LKPopupMenuController.h"
 
-@interface LKPopupMenuViewController : UIViewController <LKPopupMenuDelegate> {
+@interface LKPopupMenuViewController : UIViewController <LKPopupMenuControllerDelegate> {
     UIButton *popupButton;
     UITextField *title;
 }
 
 @property (nonatomic, retain) NSArray* list;
 
-@property (nonatomic, retain) LKPopupMenu* popupMenu;
-@property (nonatomic, retain) LKPopupMenu* sizeMenu;
-@property (nonatomic, retain) LKPopupMenu* colorMenu;
-@property (nonatomic, retain) LKPopupMenu* animationMenu;
-@property (nonatomic, retain) LKPopupMenu* imageMenu;
+@property (nonatomic, retain) LKPopupMenuController* popupMenu;
+@property (nonatomic, retain) LKPopupMenuController* sizeMenu;
+@property (nonatomic, retain) LKPopupMenuController* colorMenu;
+@property (nonatomic, retain) LKPopupMenuController* animationMenu;
+@property (nonatomic, retain) LKPopupMenuController* imageMenu;
 
 @property (nonatomic, retain) IBOutlet UITextField *menuTitle;
 
-@property (nonatomic, assign) LKPopupMenuHeightSizeMode sizeMode;
-@property (nonatomic, assign) LKPopupMenuSelectionMode selectionMode;
+@property (nonatomic, assign) BOOL autoresizeEnabled;
+@property (nonatomic, assign) BOOL autocloseEnabled;
+@property (nonatomic, assign) BOOL bounceEnabled;
+@property (nonatomic, assign) BOOL multipleSelectionEnabled;
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL triangleEnabled;
 @property (nonatomic, assign) BOOL modalEnabled;
@@ -34,9 +36,9 @@
 @property (nonatomic, assign) BOOL outlineEnabled;
 @property (nonatomic, assign) BOOL titleHilighted;
 
-@property (nonatomic, assign) LKPopupMenuSize menuSize;
-@property (nonatomic, assign) LKPopupMenuColor menuColor;
-@property (nonatomic, assign) LKPopupMenuAnimationMode animationMode;
+@property (nonatomic, assign) LKPopupMenuControllerSize menuSize;
+@property (nonatomic, assign) LKPopupMenuControllerColor menuColor;
+@property (nonatomic, assign) LKPopupMenuControllerAnimationMode animationMode;
 
 - (IBAction)popupToDown:(id)sender;
 - (IBAction)popupToRight:(id)sender;
@@ -54,5 +56,7 @@
 - (IBAction)didChangeOutline:(id)sender;
 - (IBAction)openImageMenu:(id)sender;
 - (IBAction)didChangeTitleHighlighted:(id)sender;
+- (IBAction)didChangeAutoclose:(id)sender;
+- (IBAction)didChangeBounce:(id)sender;
 
 @end

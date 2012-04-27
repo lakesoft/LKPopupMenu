@@ -42,8 +42,8 @@
 		4CD6F8F214410CD30056F111 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F014410CD30056F111 /* InfoPlist.strings */; };
 		4CD6F8F414410CD30056F111 /* LKPopupMenuTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */; };
 		4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */; };
-		4CD6F90214410D290056F111 /* LKPopupMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenu.m */; };
-		4CD6F90314410D290056F111 /* LKPopupMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenu.m */; };
+		4CD6F90214410D290056F111 /* LKPopupMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenuController.m */; };
+		4CD6F90314410D290056F111 /* LKPopupMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenuController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,8 +96,8 @@
 		4CD6F8F114410CD30056F111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CD6F8F314410CD30056F111 /* LKPopupMenuTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuTests.h; sourceTree = "<group>"; };
 		4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuTests.m; sourceTree = "<group>"; };
-		4CD6F90014410D290056F111 /* LKPopupMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKPopupMenu.h; sourceTree = "<group>"; };
-		4CD6F90114410D290056F111 /* LKPopupMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenu.m; sourceTree = "<group>"; };
+		4CD6F90014410D290056F111 /* LKPopupMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuController.h; sourceTree = "<group>"; };
+		4CD6F90114410D290056F111 /* LKPopupMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +129,6 @@
 		4CD6F8B614410CD10056F111 = {
 			isa = PBXGroup;
 			children = (
-				4C53AD3E1452E72C0074C034 /* QuartzCore.framework */,
 				4CD6F8FF14410CF30056F111 /* LKPopupMenu */,
 				4CD6F8CB14410CD20056F111 /* Sample Application */,
 				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,
@@ -150,6 +149,7 @@
 		4CD6F8C414410CD20056F111 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C53AD3E1452E72C0074C034 /* QuartzCore.framework */,
 				4CD6F8C514410CD20056F111 /* UIKit.framework */,
 				4CD6F8C714410CD20056F111 /* Foundation.framework */,
 				4CD6F8C914410CD20056F111 /* CoreGraphics.framework */,
@@ -224,8 +224,8 @@
 		4CD6F8FF14410CF30056F111 /* LKPopupMenu */ = {
 			isa = PBXGroup;
 			children = (
-				4CD6F90014410D290056F111 /* LKPopupMenu.h */,
-				4CD6F90114410D290056F111 /* LKPopupMenu.m */,
+				4CD6F90014410D290056F111 /* LKPopupMenuController.h */,
+				4CD6F90114410D290056F111 /* LKPopupMenuController.m */,
 			);
 			name = LKPopupMenu;
 			sourceTree = "<group>";
@@ -359,7 +359,7 @@
 				4CD6F8D214410CD20056F111 /* main.m in Sources */,
 				4CD6F8D614410CD20056F111 /* LKPopupMenuAppDelegate.m in Sources */,
 				4CD6F8DC14410CD20056F111 /* LKPopupMenuViewController.m in Sources */,
-				4CD6F90214410D290056F111 /* LKPopupMenu.m in Sources */,
+				4CD6F90214410D290056F111 /* LKPopupMenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */,
-				4CD6F90314410D290056F111 /* LKPopupMenu.m in Sources */,
+				4CD6F90314410D290056F111 /* LKPopupMenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

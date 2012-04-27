@@ -7,7 +7,7 @@
 //
 
 #import "LKPopupMenuViewController.h"
-#import "LKPopupMenu.h"
+#import "LKPopupMenuController.h"
 
 #define MENU_NUM    6
 
@@ -19,8 +19,10 @@
 @synthesize imageMenu = imageMenu_;
 @synthesize menuTitle;
 @synthesize list;
-@synthesize sizeMode;
-@synthesize selectionMode;
+@synthesize autoresizeEnabled;
+@synthesize autocloseEnabled;
+@synthesize bounceEnabled;
+@synthesize multipleSelectionEnabled;
 @synthesize shadowEnabled;
 @synthesize triangleEnabled;
 @synthesize menuSize;
@@ -50,12 +52,14 @@
         [array addObject:[NSString stringWithFormat:@"Menu Item %d", i+1]];
     }
     self.list = array;
-    self.sizeMode = LKPopupMenuHeightSizeModeAuto;
-    self.selectionMode = LKPopupMenuSelectionModeSingle;
+    self.autoresizeEnabled = YES;
+    self.autocloseEnabled = YES;
+    self.bounceEnabled = NO;
+    self.multipleSelectionEnabled = NO;
     self.shadowEnabled = YES;
-    self.menuSize = LKPopupMenuSizeMedium;
+    self.menuSize = LKPopupMenuControllerSizeMedium;
     self.triangleEnabled = YES;
-    self.animationMode = LKPopupMenuAnimationModeSlide;
+    self.animationMode = LKPopupMenuControllerAnimationModeSlide;
     self.modalEnabled = YES;
     self.separatorEnabled = YES;
     self.outlineEnabled = YES;
@@ -97,23 +101,23 @@
 #pragma mark -
 #pragma mark LKPopupMenuDelegate
 
-- (void)willAppearPopupMenu:(LKPopupMenu*)popupMenu
+- (void)willAppearPopupMenuController:(LKPopupMenuController*)popupMenuController
 {
-    NSLog(@"%s|%@", __PRETTY_FUNCTION__, popupMenu);
+    NSLog(@"%s|%@", __PRETTY_FUNCTION__, popupMenuController);
 }
-- (void)willDisappearPopupMenu:(LKPopupMenu*)popupMenu
+- (void)willDisappearPopupMenuController:(LKPopupMenuController*)popupMenuController
 {
-    NSLog(@"%s|%@", __PRETTY_FUNCTION__, popupMenu);
+    NSLog(@"%s|%@", __PRETTY_FUNCTION__, popupMenuController);
 }
-- (void)didSelectPopupMenu:(LKPopupMenu*)popupMenu atIndex:(NSUInteger)index
+- (void)popupMenuController:(LKPopupMenuController*)popupMenuController didSelectRowAtIndex:(NSUInteger)index
 {
-    NSLog(@"%s|index=%d, %@", __PRETTY_FUNCTION__, index, popupMenu.selectedIndexSet);
+    NSLog(@"%s|index=%d, %@", __PRETTY_FUNCTION__, index, popupMenuController.selectedIndexSet);
     
-    if (popupMenu == self.sizeMenu) {
+    if (popupMenuController == self.sizeMenu) {
         self.menuSize = index;
-    } else if (popupMenu == self.colorMenu) {
+    } else if (popupMenuController == self.colorMenu) {
         self.menuColor = index;
-    } else if (popupMenu == self.animationMenu) {
+    } else if (popupMenuController == self.animationMenu) {
         self.animationMode = index;
     }
 }
@@ -121,35 +125,38 @@
 
 #pragma mark -
 #pragma mark Actions
-- (void)_popupAt:(CGPoint)location arrangementMode:(LKPopupMenuArrangementMode)arrangementMode
+- (void)_popupAt:(CGPoint)location arrangementMode:(LKPopupMenuControllerArrangementMode)arrangementMode
 {
-    if (self.popupMenu.shown) {
-        [self.popupMenu hide];
+    if (self.popupMenu.popupmenuVisible) {
+        [self.popupMenu dismiss];
     } else {
         if (self.popupMenu == nil) {
-            self.popupMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.popupMenu = [LKPopupMenuController popupMenuControllerOnView:self.view];
             self.popupMenu.textList = self.list;
             self.popupMenu.delegate = self;
         }
         self.popupMenu.title = self.menuTitle.text;
-        self.popupMenu.heightSizeMode = self.sizeMode;
-        self.popupMenu.selectionMode = self.selectionMode;
+        self.popupMenu.autoresizeEnabled = self.autoresizeEnabled;
+        self.popupMenu.autocloseEnabled = self.autocloseEnabled;
+        self.popupMenu.bounceEnabled = self.bounceEnabled;
+        self.popupMenu.multipleSelectionEnabled = self.multipleSelectionEnabled;
         self.popupMenu.arrangementMode = arrangementMode;
         self.popupMenu.animationMode = self.animationMode;
-        self.popupMenu.shadowEnabled = self.shadowEnabled;
-        self.popupMenu.triangleEnabled = self.triangleEnabled;
         self.popupMenu.modalEnabled = self.modalEnabled;
-        self.popupMenu.separatorEnabled = self.separatorEnabled;
-        self.popupMenu.outlineEnabled = self.outlineEnabled;
-        self.popupMenu.titleHighlighted = self.titleHilighted;
-        self.popupMenu.appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
-                                                                               color:self.menuColor];
-
+        
+        LKPopupMenuAppearance* appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
+                                                                                       color:self.menuColor];
+        appearance.shadowEnabled = self.shadowEnabled;
+        appearance.triangleEnabled = self.triangleEnabled;
+        appearance.separatorEnabled = self.separatorEnabled;
+        appearance.outlineEnabled = self.outlineEnabled;
+        appearance.titleHighlighted = self.titleHilighted;
+        self.popupMenu.appearance = appearance;
 // test auto resizing
 //        self.popupMenu.appearance.listWidth = 1000.0;
 //        self.popupMenu.appearance.listHeight = 1000.0;
 
-        [self.popupMenu showAtLocation:location];
+        [self.popupMenu presentPopupMenuFromLocation:location];
     }
 }
 
@@ -158,18 +165,18 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y - 2.0);
-    [self _popupAt:location arrangementMode:LKPopupMenuArrangementModeUp];
+    [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeUp];
 }
 
 - (IBAction)didChangeSizeMode:(id)sender {
     UISwitch* sw = (UISwitch*)sender;
-    self.sizeMode = sw.on ? LKPopupMenuHeightSizeModeAuto : LKPopupMenuHeightSizeModeFixed;
+    self.autoresizeEnabled = sw.on;
 
 }
 
 - (IBAction)didChangeSelectionMode:(id)sender {
     UISwitch* sw = (UISwitch*)sender;
-    self.selectionMode = sw.on ? LKPopupMenuSelectionModeMultiple : LKPopupMenuSelectionModeSingle;
+    self.multipleSelectionEnabled = sw.on;
 }
 
 - (IBAction)didChangeShadowEnabled:(id)sender {
@@ -182,20 +189,20 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y - 2.0);
-    if (self.colorMenu.shown) {
-        [self.colorMenu hide];
+    if (self.colorMenu.popupmenuVisible) {
+        [self.colorMenu dismiss];
     } else {
         if (self.colorMenu == nil) {
-            self.colorMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.colorMenu = [LKPopupMenuController popupMenuControllerOnView:self.view];
             self.colorMenu.textList = [NSArray arrayWithObjects:
                                   @"Default", @"Black", @"White", @"Gray", nil];
             self.colorMenu.delegate = self;
         }
         self.colorMenu.title = @"Menu Color";
-        self.colorMenu.arrangementMode = LKPopupMenuArrangementModeUp;
-        self.colorMenu.triangleEnabled = YES;    
+        self.colorMenu.arrangementMode = LKPopupMenuControllerArrangementModeUp;
+        self.colorMenu.appearance.triangleEnabled = YES;    
         self.colorMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:self.menuColor];
-        [self.colorMenu showAtLocation:location];
+        [self.colorMenu presentPopupMenuFromLocation:location];
     }
 }
 
@@ -204,20 +211,20 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y - 2.0);
-    if (self.sizeMenu.shown) {
-        [self.sizeMenu hide];
+    if (self.sizeMenu.popupmenuVisible) {
+        [self.sizeMenu dismiss];
     } else {
         if (self.sizeMenu == nil) {
-            self.sizeMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.sizeMenu = [LKPopupMenuController popupMenuControllerOnView:self.view];
             self.sizeMenu.textList = [NSArray arrayWithObjects:
                                     @"Small", @"Medium", @"Large", nil];
             self.sizeMenu.delegate = self;
-            self.sizeMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuSizeMedium];
+            self.sizeMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuControllerSizeMedium];
         }
         self.sizeMenu.title = @"Menu Size";
-        self.sizeMenu.arrangementMode = LKPopupMenuArrangementModeUp;
-        self.sizeMenu.triangleEnabled = YES;
-        [self.sizeMenu showAtLocation:location];
+        self.sizeMenu.arrangementMode = LKPopupMenuControllerArrangementModeUp;
+        self.sizeMenu.appearance.triangleEnabled = YES;
+        [self.sizeMenu presentPopupMenuFromLocation:location];
     }
 }
 
@@ -232,20 +239,20 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y - 2.0);
-    if (self.animationMenu.shown) {
-        [self.animationMenu hide];
+    if (self.animationMenu.popupmenuVisible) {
+        [self.animationMenu dismiss];
     } else {
         if (self.animationMenu == nil) {
-            self.animationMenu = [LKPopupMenu popupMenuOnView:self.view];
+            self.animationMenu = [LKPopupMenuController popupMenuControllerOnView:self.view];
             self.animationMenu.textList = [NSArray arrayWithObjects:
-                                   @"None", @"Slide", @"OpenClose", @"Fade", nil];
+                                   @"None", @"Slide", @"Slide with bounce", @"OpenClose", @"Fade", nil];
             self.animationMenu.delegate = self;
-            self.animationMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuAnimationModeSlide];
+            self.animationMenu.selectedIndexSet = [NSIndexSet indexSetWithIndex:LKPopupMenuControllerAnimationModeSlide];
         }
         self.animationMenu.title = @"Animation Mode";
-        self.animationMenu.arrangementMode = LKPopupMenuArrangementModeUp;
-        self.animationMenu.triangleEnabled = YES;        
-        [self.animationMenu showAtLocation:location];
+        self.animationMenu.arrangementMode = LKPopupMenuControllerArrangementModeUp;
+        self.animationMenu.appearance.triangleEnabled = YES;        
+        [self.animationMenu presentPopupMenuFromLocation:location];
     }
 }
 
@@ -264,11 +271,11 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y - 2.0);
-    if (self.animationMenu.shown) {
-        [self.animationMenu hide];
+    if (self.animationMenu.popupmenuVisible) {
+        [self.animationMenu dismiss];
     } else {
         if (self.imageMenu == nil) {
-            self.imageMenu = [LKPopupMenu popupMenuOnView:self.view appearacne:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuSizeMedium color:LKPopupMenuColorWhite]];
+            self.imageMenu = [LKPopupMenuController popupMenuControllerOnView:self.view appearacne:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuControllerSizeMedium color:LKPopupMenuControllerColorWhite]];
             self.imageMenu.textList = [NSArray arrayWithObjects:
                                        @"Cloud",
                                        @"Clouds",
@@ -287,23 +294,25 @@
                                                 @"Weather Snow",
                                                 @"Weather Sunny",
                                                 @"Weather Thunder",
-                                                LKPopupMenuBlankImage,
+                                                LKPopupMenuControllerBlankImage,
                                        nil];
             self.imageMenu.delegate = self;
             self.imageMenu.title = @"Weather Menu";
-            self.imageMenu.arrangementMode = LKPopupMenuArrangementModeUp;
+            self.imageMenu.arrangementMode = LKPopupMenuControllerArrangementModeUp;
         }
-        self.imageMenu.heightSizeMode = self.sizeMode;
-        self.imageMenu.selectionMode = self.selectionMode;
+        self.imageMenu.autoresizeEnabled = self.autoresizeEnabled;
+        self.imageMenu.autocloseEnabled = self.autocloseEnabled;
+        self.imageMenu.bounceEnabled = self.bounceEnabled;
+        self.imageMenu.multipleSelectionEnabled = self.multipleSelectionEnabled;
         self.imageMenu.animationMode = self.animationMode;
-        self.imageMenu.shadowEnabled = self.shadowEnabled;
-        self.imageMenu.triangleEnabled = self.triangleEnabled;
         self.imageMenu.modalEnabled = self.modalEnabled;
-        self.imageMenu.separatorEnabled = self.separatorEnabled;
-        self.imageMenu.outlineEnabled = self.outlineEnabled;
-        self.imageMenu.titleHighlighted = self.titleHilighted;
+        self.imageMenu.appearance.shadowEnabled = self.shadowEnabled;
+        self.imageMenu.appearance.triangleEnabled = self.triangleEnabled;
+        self.imageMenu.appearance.separatorEnabled = self.separatorEnabled;
+        self.imageMenu.appearance.outlineEnabled = self.outlineEnabled;
+        self.imageMenu.appearance.titleHighlighted = self.titleHilighted;
 
-        [self.imageMenu showAtLocation:location];
+        [self.imageMenu presentPopupMenuFromLocation:location];
     }
 }
 
@@ -312,9 +321,19 @@
     self.titleHilighted = sw.on;
 }
 
+- (IBAction)didChangeAutoclose:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.autocloseEnabled = sw.on;
+}
+
 - (IBAction)didChangeOutline:(id)sender {
     UISwitch* sw = (UISwitch*)sender;
     self.outlineEnabled = sw.on;
+}
+
+- (IBAction)didChangeBounce:(id)sender {
+    UISwitch* sw = (UISwitch*)sender;
+    self.bounceEnabled = sw.on;
 }
 
 - (IBAction)popupToDown:(id)sender {
@@ -322,7 +341,7 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width/2.0,
                                    origin.y + size.height + 2.0);
-    [self _popupAt:location arrangementMode:LKPopupMenuArrangementModeDown];
+    [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeDown];
 }
 
 - (IBAction)popupToRight:(id)sender {
@@ -330,7 +349,7 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x + size.width + 2.0,
                                    origin.y + size.height/2.0);
-    [self _popupAt:location arrangementMode:LKPopupMenuArrangementModeRight];
+    [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeRight];
 }
 
 - (IBAction)popupToLeft:(id)sender {
@@ -338,7 +357,7 @@
     CGPoint origin = ((UIButton*)sender).frame.origin;
     CGPoint location = CGPointMake(origin.x - 2.0,
                                    origin.y + size.height/2.0);
-    [self _popupAt:location arrangementMode:LKPopupMenuArrangementModeLeft];
+    [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeLeft];
 }
 
 @end

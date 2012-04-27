@@ -1,12 +1,31 @@
+//==============================================================================
+// LKPopupMenuController
+//------------------------------------------------------------------------------
 //
-//  LKPopupMenu.m
-//  LKPopupMenu
+// Copyright (c) 2011 Hiroshi Hashiguchi
 //
-//  Created by Hashiguchi Hiroshi on 11/10/09.
-//  Copyright 2011年 __MyCompanyName__. All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//------------------------------------------------------------------------------
+
 #import <QuartzCore/QuartzCore.h>
-#import "LKPopupMenu.h"
+#import "LKPopupMenuController.h"
 
 //------------------------------------------------------------------------------
 @implementation LKPopupMenuAppearance
@@ -16,6 +35,7 @@
 @synthesize menuTextColor;
 @synthesize titleBackgroundColor;
 @synthesize titleTextColor;
+@synthesize titleTextShadowColor;
 @synthesize menuHilightedColor;
 @synthesize checkMarkColor;
 @synthesize separatorColor;
@@ -29,13 +49,21 @@
 @synthesize listWidth, listHeight;
 @synthesize outlineWith;
 
-+ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize color:(LKPopupMenuColor)menuColor
+// appearance
+@synthesize shadowEnabled;
+@synthesize triangleEnabled;
+@synthesize separatorEnabled;
+@synthesize outlineEnabled;
+@synthesize titleHighlighted;
+
+
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuControllerSize)menuSize color:(LKPopupMenuControllerColor)menuColor
 {
     LKPopupMenuAppearance* appearance = [[[LKPopupMenuAppearance alloc] init] autorelease];
 
     // setup sizes
     switch (menuSize) {
-        case LKPopupMenuSizeSmall:
+        case LKPopupMenuControllerSizeSmall:
             appearance.titleHeight = 25.0;
             appearance.cellHeight = 30.0;
             appearance.fontSize = 12.0;
@@ -44,7 +72,7 @@
             appearance.outlineWith = 1.0;
             break;
             
-        case LKPopupMenuSizeMedium:
+        case LKPopupMenuControllerSizeMedium:
             appearance.titleHeight = 30.0;
             appearance.cellHeight = 35.0;
             appearance.fontSize = 14.0;
@@ -53,7 +81,7 @@
             appearance.outlineWith = 2.0;
             break;
             
-        case LKPopupMenuSizeLarge:
+        case LKPopupMenuControllerSizeLarge:
             appearance.titleHeight = 35.0;
             appearance.cellHeight = 40.0;
             appearance.fontSize = 17.0;
@@ -68,37 +96,40 @@
 
     // setup colors
     switch (menuColor) {
-        case LKPopupMenuColorDefault:
-        case LKPopupMenuColorBlack:
+        case LKPopupMenuControllerColorDefault:
+        case LKPopupMenuControllerColorBlack:
             appearance.menuBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.65];
             appearance.menuTextColor = [UIColor whiteColor];
             appearance.menuHilightedColor = [UIColor colorWithWhite:0.5 alpha:0.5];    
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
             appearance.titleTextColor = [UIColor whiteColor];
+            appearance.titleTextShadowColor = [UIColor blackColor];
             appearance.checkMarkColor = [UIColor whiteColor];
             appearance.separatorColor = [UIColor colorWithWhite:0.5 alpha:0.9];
             appearance.outlineColor   = [UIColor whiteColor];
             appearance.indicatorStyle = UIScrollViewIndicatorStyleWhite;            
             break;
 
-        case LKPopupMenuColorWhite:
+        case LKPopupMenuControllerColorWhite:
             appearance.menuBackgroundColor = [UIColor colorWithWhite:1.0 alpha:0.85];
             appearance.menuTextColor = [UIColor colorWithWhite:0.25 alpha:1.0];
             appearance.menuHilightedColor = [UIColor colorWithWhite:0.75 alpha:1.0];
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.85 alpha:0.95];
             appearance.titleTextColor = [UIColor colorWithWhite:0.35 alpha:1.0];
+            appearance.titleTextShadowColor = [UIColor whiteColor];
             appearance.checkMarkColor = [UIColor darkGrayColor];
             appearance.separatorColor = [UIColor colorWithWhite:1.0 alpha:1.0];
             appearance.outlineColor   = [UIColor whiteColor];
             appearance.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             break;
 
-        case LKPopupMenuColorGray:
+        case LKPopupMenuControllerColorGray:
             appearance.menuBackgroundColor = [UIColor colorWithWhite:0.75 alpha:0.9];
             appearance.menuTextColor = [UIColor whiteColor];
             appearance.menuHilightedColor = [UIColor colorWithWhite:0.6 alpha:0.9];
             appearance.titleBackgroundColor = [UIColor colorWithWhite:0.5 alpha:0.9];
             appearance.titleTextColor = [UIColor whiteColor];
+            appearance.titleTextShadowColor = [UIColor blackColor];
             appearance.checkMarkColor = [UIColor whiteColor];
             appearance.separatorColor = [UIColor colorWithWhite:0.85 alpha:0.9];
             appearance.outlineColor   = [UIColor whiteColor];
@@ -109,13 +140,20 @@
             break;
     }
 
+    // setup appearance
+    appearance.shadowEnabled = YES;
+    appearance.triangleEnabled = YES;
+    appearance.separatorEnabled = YES;
+    appearance.outlineEnabled = YES;
+    appearance.titleHighlighted = YES;
+    appearance.separatorEnabled = YES;
 
     return appearance;
 }
 
-+ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuSize)menuSize
++ (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuControllerSize)menuSize
 {
-    return [self defaultAppearanceWithSize:menuSize color:LKPopupMenuColorDefault];
+    return [self defaultAppearanceWithSize:menuSize color:LKPopupMenuControllerColorDefault];
 }
 
 - (void)dealloc
@@ -125,6 +163,7 @@
     self.menuHilightedColor = nil;
     self.titleBackgroundColor = nil;
     self.titleTextColor = nil;
+    self.titleTextShadowColor = nil;
     self.checkMarkColor = nil;
     self.separatorColor = nil;
     self.outlineColor = nil;
@@ -137,12 +176,12 @@
 @class LKPopupMenuView;
 @class LKPopupBackgroundView;
 //==============================================================================
-@interface LKPopupMenu() <UITableViewDelegate, UITableViewDataSource>
+@interface LKPopupMenuController() <UITableViewDelegate, UITableViewDataSource>
 //==============================================================================
 
 @property (nonatomic, assign) UIView* parentView;
 @property (nonatomic, retain) LKPopupMenuView* popupMenuBaseView;
-@property (nonatomic, assign) BOOL shown;
+@property (nonatomic, assign) BOOL popupmenuVisible;
 @property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
 @property (nonatomic, retain) NSMutableIndexSet* indexSet;
 
@@ -151,13 +190,13 @@
 //------------------------------------------------------------------------------
 @interface LKPopupBackgroundView : UIView
 //------------------------------------------------------------------------------
-@property (nonatomic, assign) LKPopupMenu* popupMenu;
+@property (nonatomic, assign) LKPopupMenuController* popupMenu;
 @end
 @implementation LKPopupBackgroundView
 @synthesize popupMenu;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self.popupMenu hide];
+    [self.popupMenu dismiss];
 }
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -174,7 +213,7 @@
 //==============================================================================
 @property (nonatomic, assign) CATextLayer* textLayer;
 @property (nonatomic, assign) CAGradientLayer* gradientLayer;
-- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenu*)popupMenu;
+- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenuController*)popupMenu;
 @end
 
 //------------------------------------------------------------------------------
@@ -185,19 +224,23 @@
 @synthesize textLayer = textLayer_;
 @synthesize gradientLayer = gradientLayer_;
 
-- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenu*)popupMenu
+- (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenuController*)popupMenu
 {
     self = [super initWithFrame:frame];
     if (self) {
         // setup basics
         self.backgroundColor = popupMenu.appearance.titleBackgroundColor;
-                
+        
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        
         // setup gradient layer
-        if (popupMenu.titleHighlighted) {
+        if (popupMenu.appearance.titleHighlighted) {
             self.gradientLayer = [CAGradientLayer layer];
+            self.gradientLayer.contentsScale = scale;
             self.gradientLayer.frame = self.bounds;
             self.gradientLayer.locations = [NSArray arrayWithObjects:
                                             [NSNumber numberWithFloat:0.0],
+                                            [NSNumber numberWithFloat:0.2],
                                             [NSNumber numberWithFloat:0.5],
                                             [NSNumber numberWithFloat:0.5],
                                             [NSNumber numberWithFloat:1.0],
@@ -205,7 +248,8 @@
             self.gradientLayer.colors =
                 [NSArray arrayWithObjects:
                  (id)[UIColor colorWithWhite:1.0 alpha:0.6].CGColor,
-                 (id)[UIColor colorWithWhite:1.0 alpha:0.4].CGColor,
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
+                 (id)[UIColor colorWithWhite:1.0 alpha:0.35].CGColor,
                  (id)[UIColor colorWithWhite:1.0 alpha:0.3].CGColor,
                  (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor,
                  nil];
@@ -215,7 +259,8 @@
         
         // setup text layer
         self.textLayer = [CATextLayer layer];
-        
+        self.textLayer.contentsScale = scale;
+
         self.textLayer.string = popupMenu.title;
         UIFont* font = [UIFont boldSystemFontOfSize:popupMenu.appearance.fontSize];
         CGSize textSize = [popupMenu.title sizeWithFont:font];
@@ -223,11 +268,21 @@
                                           (self.frame.size.height - textSize.height)/2.0 + 3,
                                           self.frame.size.width - LK_POPUP_MENU_PADDING_X*2,
                                           textSize.height);
-        self.textLayer.font = CGFontCreateWithFontName((CFStringRef)font.fontName);
+        CGFontRef cgfont = CGFontCreateWithFontName((CFStringRef)font.fontName);
+        self.textLayer.font = cgfont;
+        CFRelease(cgfont);
         self.textLayer.fontSize = popupMenu.appearance.fontSize;
         self.textLayer.foregroundColor = popupMenu.appearance.titleTextColor.CGColor;
         self.textLayer.truncationMode = kCATruncationEnd;
         self.textLayer.alignmentMode = kCAAlignmentLeft;
+        
+        if (popupMenu.appearance.titleHighlighted) {
+            self.textLayer.shadowColor = popupMenu.appearance.titleTextShadowColor.CGColor;
+            self.textLayer.shadowRadius = 0.5;
+            self.textLayer.shadowOffset =CGSizeMake(-0.5, -0.5);
+            self.textLayer.shadowOpacity = 1.0;
+        }
+
         [self.layer addSublayer:self.textLayer];
         
     }
@@ -257,7 +312,7 @@ typedef enum {
     LKPopupMenuViewTypeFrame
 } LKPopupMenuViewType;
 
-@property (nonatomic, assign) LKPopupMenu* popupMenu;
+@property (nonatomic, assign) LKPopupMenuController* popupMenu;
 @property (nonatomic, assign) UITableView* tableView;
 @property (nonatomic, assign) CGRect tableFrame;
 @property (nonatomic, assign) CGFloat shadowOffset;
@@ -266,8 +321,8 @@ typedef enum {
 @property (nonatomic, retain) UIBezierPath* path;
 @property (nonatomic, assign) LKPopupMenuViewType type;
 
-- (id)initAsBaseWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title;
-- (id)initAsFrameWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title;
+- (id)initAsBaseWithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title;
+- (id)initAsFrameWithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title;
 - (void)setupPathAtLocation:(CGPoint)location;
 - (void)reloadData;
 
@@ -298,8 +353,8 @@ typedef enum {
     [path moveToPoint:p];
     
     // upper
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown) {
+    if (self.popupMenu.appearance.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeDown) {
         p.x = tp.x - self.triangleSize.width/2.0;
         [path addLineToPoint:p];
         p.x += self.triangleSize.width/2.0;
@@ -325,8 +380,8 @@ typedef enum {
     
     // right
     p.x += LK_POPUP_MENU_CORNER_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeLeft) {
+    if (self.popupMenu.appearance.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeLeft) {
         p.y = tp.y - self.triangleSize.width/2.0;
         [path addLineToPoint:p];
         p.x += self.triangleSize.height;
@@ -352,8 +407,8 @@ typedef enum {
     
     // lower
     p.y += LK_POPUP_MENU_CORNER_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeUp) {
+    if (self.popupMenu.appearance.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeUp) {
         p.x = tp.x + self.triangleSize.width/2.0;
         [path addLineToPoint:p];
         p.x -= self.triangleSize.width/2.0;
@@ -379,8 +434,8 @@ typedef enum {
     
     // left
     p.x -= LK_POPUP_MENU_CORNER_RADIUS;
-    if (self.popupMenu.triangleEnabled &&
-        self.popupMenu.arrangementMode == LKPopupMenuArrangementModeRight) {
+    if (self.popupMenu.appearance.triangleEnabled &&
+        self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeRight) {
         p.y = tp.y + self.triangleSize.width/2.0;
         [path addLineToPoint:p];
         p.x -= self.triangleSize.height;
@@ -408,13 +463,13 @@ typedef enum {
     self.path = path;
 }
 
- - (id)_initAsType:(LKPopupMenuViewType)type WithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+ - (id)_initAsType:(LKPopupMenuViewType)type WithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title
 {
     self.type = type;
     self.popupMenu = popupMenu;
     LKPopupMenuAppearance* appearance = popupMenu.appearance;
     
-    self.shadowOffset = self.popupMenu.shadowEnabled ? LK_POPUP_MENU_SHADOW_OFFSET : 0;
+    self.shadowOffset = self.popupMenu.appearance.shadowEnabled ? LK_POPUP_MENU_SHADOW_OFFSET : 0;
     self.triangleSize = CGSizeMake(LK_POPUP_MENU_TRIANGLE_LONG, LK_POPUP_MENU_TRIANGLE_SHORT);
 
     if (title && [[title stringByTrimmingCharactersInSet:
@@ -427,7 +482,7 @@ typedef enum {
     // setup list size
     CGFloat listWidth, listHeight;
     listWidth = appearance.listWidth;
-    if (self.popupMenu.heightSizeMode == LKPopupMenuHeightSizeModeAuto) {
+    if (self.popupMenu.autoresizeEnabled) {
         listHeight = appearance.cellHeight * [self.popupMenu.textList count] + self.titleHeight;
     } else {
         listHeight = appearance.listHeight;
@@ -439,19 +494,19 @@ typedef enum {
     menuHeight = listHeight + LK_POPUP_MENU_PADDING*2 + self.shadowOffset;
 
     switch (self.popupMenu.arrangementMode) {
-        case LKPopupMenuArrangementModeUp:
+        case LKPopupMenuControllerArrangementModeUp:
             menuHeight += self.triangleSize.height;
             break;
             
-        case LKPopupMenuArrangementModeDown:
+        case LKPopupMenuControllerArrangementModeDown:
             menuHeight += self.triangleSize.height;
             break;
             
-        case LKPopupMenuArrangementModeRight:
+        case LKPopupMenuControllerArrangementModeRight:
             menuWidth += self.triangleSize.height;
             break;
             
-        case LKPopupMenuArrangementModeLeft:
+        case LKPopupMenuControllerArrangementModeLeft:
             menuWidth += self.triangleSize.height;
             break;
     }
@@ -459,22 +514,22 @@ typedef enum {
     // adjust origin and size
     CGFloat menuX, menuY;    
     switch (self.popupMenu.arrangementMode) {
-        case LKPopupMenuArrangementModeUp:
+        case LKPopupMenuControllerArrangementModeUp:
             menuX = location.x - menuWidth/2.0;
             menuY = location.y - menuHeight;
             break;
             
-        case LKPopupMenuArrangementModeDown:
+        case LKPopupMenuControllerArrangementModeDown:
             menuX = location.x - menuWidth/2.0;
             menuY = location.y;
             break;
             
-        case LKPopupMenuArrangementModeRight:
+        case LKPopupMenuControllerArrangementModeRight:
             menuX = location.x;
             menuY = location.y - menuHeight/2.0;
             break;
             
-        case LKPopupMenuArrangementModeLeft:
+        case LKPopupMenuControllerArrangementModeLeft:
             menuX = location.x - menuWidth;
             menuY = location.y - menuHeight/2.0;
             break;
@@ -484,8 +539,8 @@ typedef enum {
     CGFloat delta;
 
     if (menuX < 0) {
-        if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeLeft ||
-            self.popupMenu.arrangementMode == LKPopupMenuArrangementModeRight) {
+        if (self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeLeft ||
+            self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeRight) {
             menuWidth += menuX - LK_POPUP_MENU_MARGIN;
             listWidth += menuX - LK_POPUP_MENU_MARGIN;
         }
@@ -497,8 +552,8 @@ typedef enum {
         if (-delta < menuX) {
             menuX += delta;
         } else {
-            if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeUp ||
-                self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown) {
+            if (self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeUp ||
+                self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeDown) {
                 if (LK_POPUP_MENU_MARGIN < menuX) {
                     delta += menuX - LK_POPUP_MENU_MARGIN;
                     if (delta > 0) {
@@ -513,8 +568,8 @@ typedef enum {
     }
 
     if (menuY < 0) {
-        if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeUp ||
-            self.popupMenu.arrangementMode == LKPopupMenuArrangementModeDown) {
+        if (self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeUp ||
+            self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeDown) {
             menuHeight += menuY - LK_POPUP_MENU_MARGIN;
             listHeight += menuY - LK_POPUP_MENU_MARGIN;
         }
@@ -528,8 +583,8 @@ typedef enum {
         if (-delta < menuY) {
             menuY += delta;
         } else {
-            if (self.popupMenu.arrangementMode == LKPopupMenuArrangementModeLeft ||
-                self.popupMenu.arrangementMode == LKPopupMenuArrangementModeRight) {
+            if (self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeLeft ||
+                self.popupMenu.arrangementMode == LKPopupMenuControllerArrangementModeRight) {
                 if (LK_POPUP_MENU_MARGIN < menuY) {
                     delta += menuY - LK_POPUP_MENU_MARGIN;
                     if (delta > 0) {
@@ -546,7 +601,7 @@ typedef enum {
     menuX = floor(menuX + 0.5);
     menuY = floor(menuY + 0.5);
 
-    CGRect frame;
+    CGRect frame = CGRectZero;
     
     if (type == LKPopupMenuViewTypeBase) {
         frame = CGRectMake(menuX, menuY, menuWidth, menuHeight);
@@ -560,18 +615,18 @@ typedef enum {
         CGFloat tableX = LK_POPUP_MENU_PADDING;
         CGFloat tableY = LK_POPUP_MENU_PADDING;
         switch (self.popupMenu.arrangementMode) {
-            case LKPopupMenuArrangementModeUp:
+            case LKPopupMenuControllerArrangementModeUp:
                 break;
                 
-            case LKPopupMenuArrangementModeDown:
+            case LKPopupMenuControllerArrangementModeDown:
                 tableY += self.triangleSize.height;
                 break;
                 
-            case LKPopupMenuArrangementModeRight:
+            case LKPopupMenuControllerArrangementModeRight:
                 tableX += self.triangleSize.height;
                 break;
                 
-            case LKPopupMenuArrangementModeLeft:
+            case LKPopupMenuControllerArrangementModeLeft:
                 break;
         }
 
@@ -584,7 +639,7 @@ typedef enum {
             self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             self.tableView.showsVerticalScrollIndicator = YES;
             self.tableView.indicatorStyle = appearance.indicatorStyle;
-            self.tableView.bounces = NO;
+            self.tableView.bounces = popupMenu.bounceEnabled;
             
             self.tableView.backgroundColor = [UIColor clearColor];
             CALayer* layer = self.tableView.layer;
@@ -615,7 +670,7 @@ typedef enum {
     return self;
 }
 
-- (id)initAsFrameWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+- (id)initAsFrameWithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title
 {
     return [self _initAsType:LKPopupMenuViewTypeFrame
                WithPopupMenu:popupMenu
@@ -623,7 +678,7 @@ typedef enum {
                        title:title];
 }
 
-- (id)initAsBaseWithPopupMenu:(LKPopupMenu*)popupMenu location:(CGPoint)location title:(NSString*)title
+- (id)initAsBaseWithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title
 {
     return [self _initAsType:LKPopupMenuViewTypeBase
                WithPopupMenu:popupMenu
@@ -723,7 +778,7 @@ typedef enum {
 //------------------------------------------------------------------------------
 @interface LKPopupMenuCell : UITableViewCell
 //------------------------------------------------------------------------------
-+ (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu;
++ (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenuController*)popupMenu;
 @property (nonatomic, retain) LKPopupMenuCheckMarkView* checkMarkView;
 @property (nonatomic, assign) LKPopupMenuAppearance* appearance;
 @property (nonatomic, assign) BOOL separatorEnabled;
@@ -734,7 +789,7 @@ typedef enum {
 @synthesize appearance = appearance_;
 @synthesize separatorEnabled = separatorEnabled_;
 
-+ (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenu*)popupMenu
++ (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenuController*)popupMenu
 {
     static NSString *cellIdentifier = @"LKPopupMenuCell";
     
@@ -748,7 +803,7 @@ typedef enum {
         CGPoint p = CGPointMake(tableView.frame.size.width - LK_POPUP_MENU_CHECK_MARK_SIZE - 8.0,
                                 (cell.appearance.cellHeight - LK_POPUP_MENU_CHECK_MARK_SIZE)/2.0);
         cell.checkMarkView = [LKPopupMenuCheckMarkView checkMarkViewAtPoint:p color:cell.appearance.checkMarkColor];
-        cell.separatorEnabled = popupMenu.separatorEnabled;
+        cell.separatorEnabled = popupMenu.appearance.separatorEnabled;
         [cell.contentView addSubview:cell.checkMarkView];
     }
     return cell;
@@ -796,30 +851,27 @@ typedef enum {
 @end
 
 //------------------------------------------------------------------------------
-@implementation LKPopupMenu
+@implementation LKPopupMenuController
 //------------------------------------------------------------------------------
 @synthesize indexSet = indexSet_;
 
 @synthesize textList = textList_;
 @synthesize imageFilenameList = imageFilenameList;
 @synthesize delegate = delegate_;
-@synthesize selectionMode = selectionMode_;
+@synthesize multipleSelectionEnabled = multipleSelectionEnabled_;
 @synthesize arrangementMode = arrangementMode_;
 @synthesize animationMode = animationMode_;
 @synthesize modalEnabled = modalEnabled_;
 
 @synthesize parentView = parentView_;
 @synthesize title = title_;
-@synthesize shown = shown_;
+@synthesize popupmenuVisible = shown_;
 
-@synthesize heightSizeMode = heightSizeMode_;
+@synthesize autoresizeEnabled = autoresizeEnabled_;
+@synthesize autocloseEnabled = autocloseEnabled_;
+@synthesize bounceEnabled = bounceEnabled_;
 
 @synthesize appearance = appearance_;
-@synthesize shadowEnabled = shadowEnabled_;
-@synthesize triangleEnabled = triangleEnabled_;
-@synthesize separatorEnabled = separatorEnabled_;
-@synthesize outlineEnabled = outlineEnabled_;
-@synthesize titleHighlighted = titleHighlighted_;
 
 @synthesize popupMenuBaseView = popupMenuBaseView_;
 @synthesize backgroundView = backgroundView_;
@@ -833,18 +885,14 @@ typedef enum {
     self = [super init];
     if (self) {
         self.parentView = parentView;
-        self.heightSizeMode = LKPopupMenuHeightSizeModeAuto;
-        self.selectionMode = LKPopupMenuSelectionModeSingle;
-        self.arrangementMode = LKPopupMenuArrangementModeDown;
-        self.animationMode = LKPopupMenuAnimationModeSlide;
-        self.shadowEnabled = YES;
-        self.triangleEnabled = YES;
-        self.separatorEnabled = YES;
-        self.outlineEnabled = YES;
-        self.titleHighlighted = YES;
+        self.autoresizeEnabled = YES;
+        self.autocloseEnabled = YES;
+        self.bounceEnabled = NO;
+        self.multipleSelectionEnabled = NO;
+        self.arrangementMode = LKPopupMenuControllerArrangementModeDown;
+        self.animationMode = LKPopupMenuControllerAnimationModeSlide;
         self.selectedIndexSet = [NSMutableIndexSet indexSet];
         self.modalEnabled = YES;
-        self.separatorEnabled = YES;
         self.indexSet = [NSMutableIndexSet indexSet];
 
         self.appearance = appearance;
@@ -889,24 +937,24 @@ typedef enum {
 
 #pragma mark -
 #pragma mark API
-+ (LKPopupMenu*)popupMenuOnView:(UIView*)parentView
++ (LKPopupMenuController*)popupMenuControllerOnView:(UIView*)parentView
 {
     return [[[self alloc] initWithView:parentView
-                            appearance:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuSizeMedium]] autorelease];
+                            appearance:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuControllerSizeMedium]] autorelease];
 }
 
-+ (LKPopupMenu*)popupMenuOnView:(UIView*)parentView appearacne:(LKPopupMenuAppearance*)appearance
++ (LKPopupMenuController*)popupMenuControllerOnView:(UIView*)parentView appearacne:(LKPopupMenuAppearance*)appearance
 {
     return [[[self alloc] initWithView:parentView
                             appearance:appearance] autorelease];
 }
 
-- (void)showAtLocation:(CGPoint)location
+- (void)presentPopupMenuFromLocation:(CGPoint)location
 {
-    self.shown = YES;
+    self.popupmenuVisible = YES;
 
-    if ([self.delegate respondsToSelector:@selector(willAppearPopupMenu:)]) {
-        [self.delegate willAppearPopupMenu:self];
+    if ([self.delegate respondsToSelector:@selector(willAppearPopupMenuController:)]) {
+        [self.delegate willAppearPopupMenuController:self];
     }
 
     if (self.popupMenuBaseView) {
@@ -930,7 +978,7 @@ typedef enum {
     CGPoint p = [self.popupMenuBaseView convertPoint:location fromView:self.parentView];
     [self.popupMenuBaseView setupPathAtLocation:p];
     
-    if (self.outlineEnabled) {
+    if (self.appearance.outlineEnabled) {
         LKPopupMenuView* frameView = [[[LKPopupMenuView alloc] initAsFrameWithPopupMenu:self
                                                                                location:location
                                                                                   title:title] autorelease];
@@ -940,36 +988,47 @@ typedef enum {
 
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 
-    if (self.animationMode != LKPopupMenuAnimationModeNone) {
+    if (self.animationMode != LKPopupMenuControllerAnimationModeNone) {
 
         CGAffineTransform t1 = self.popupMenuBaseView.transform;
         CGAffineTransform t2 = self.popupMenuBaseView.transform;
         CGSize viewSize = self.popupMenuBaseView.frame.size;
         
-        if (self.animationMode == LKPopupMenuAnimationModeSlide) {
+        if (self.animationMode == LKPopupMenuControllerAnimationModeSlide ||
+            self.animationMode == LKPopupMenuControllerAnimationModeSlideWithBounce) {
+            CGFloat bx, by;
             switch (self.arrangementMode) {
-                case LKPopupMenuArrangementModeUp:
+                case LKPopupMenuControllerArrangementModeUp:
                     t1 = CGAffineTransformTranslate(t1, 0, viewSize.height/2.0);
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    bx = 0;
+                    by = 20.0;
                     break;
 
-                case LKPopupMenuArrangementModeDown:
+                case LKPopupMenuControllerArrangementModeDown:
                     t1 = CGAffineTransformTranslate(t1, 0, -viewSize.height/2.0);
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
+                    bx = 0;
+                    by = -20.0;
                     break;
                     
-                case LKPopupMenuArrangementModeRight:
+                case LKPopupMenuControllerArrangementModeRight:
                     t1 = CGAffineTransformTranslate(t1, -viewSize.width/2.0, 0);
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    bx = -20.0;
+                    by = 0;
                     break;
 
-                case LKPopupMenuArrangementModeLeft:
+                case LKPopupMenuControllerArrangementModeLeft:
                     t1 = CGAffineTransformTranslate(t1, viewSize.width/2.0, 0);
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
+                    bx = 20.0;
+                    by = 0;
                     break;
             }
             self.popupMenuBaseView.alpha = 0.5;
             self.popupMenuBaseView.tableView.alpha = 0.0;
+
             [UIView animateWithDuration:0.15
                              animations:^{
                                  self.popupMenuBaseView.transform = t2;
@@ -980,17 +1039,31 @@ typedef enum {
                                                   animations:^{
                                                       self.popupMenuBaseView.tableView.alpha = 1.0;
                                                   }];
+                                 
+                                 if (self.animationMode == LKPopupMenuControllerAnimationModeSlideWithBounce) {
+                                     self.popupMenuBaseView.tableView.contentOffset = CGPointMake(bx/2.0, by/2.0);
+                                     [UIView animateWithDuration:0.1
+                                                      animations:^{
+                                                          self.popupMenuBaseView.tableView.contentOffset = CGPointMake(bx, by);
+                                                    }
+                                                      completion:^(BOOL finished) {
+                                                          [UIView animateWithDuration:0.5
+                                                                           animations:^{
+                                                                               self.popupMenuBaseView.tableView.contentOffset = CGPointMake(0, 0);
+                                                                           }];
+                                                      }];
+                                 }
                              }];
 
-        } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
+        } else if (self.animationMode == LKPopupMenuControllerAnimationModeOpenClose) {
             switch (self.arrangementMode) {
-                case LKPopupMenuArrangementModeUp:
-                case LKPopupMenuArrangementModeDown:
+                case LKPopupMenuControllerArrangementModeUp:
+                case LKPopupMenuControllerArrangementModeDown:
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 0.001, 1.0);
                     break;
                     
-                case LKPopupMenuArrangementModeRight:
-                case LKPopupMenuArrangementModeLeft:
+                case LKPopupMenuControllerArrangementModeRight:
+                case LKPopupMenuControllerArrangementModeLeft:
                     self.popupMenuBaseView.transform = CGAffineTransformScale(t1, 1.0, 0.001);
                     break;
             }
@@ -1008,7 +1081,7 @@ typedef enum {
                                                   }];
             }];
 
-        } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
+        } else if (self.animationMode == LKPopupMenuControllerAnimationModeFade) {
             self.popupMenuBaseView.alpha = 0.0;
             [UIView animateWithDuration:0.2 animations:^{
                 self.popupMenuBaseView.alpha = 1.0;
@@ -1017,53 +1090,54 @@ typedef enum {
     }    
 }
 
-- (void)hide
+- (void)dismiss
 {
-    if (!self.shown) {
+    if (!self.popupmenuVisible) {
         return;
     }
-    self.shown = NO;
+    self.popupmenuVisible = NO;
     
     if (self.backgroundView) {
         [self.backgroundView removeFromSuperview];
     }
     self.backgroundView = nil;
 
-    if ([self.delegate respondsToSelector:@selector(willDisappearPopupMenu:)]) {
-        [self.delegate willDisappearPopupMenu:self];
+    if ([self.delegate respondsToSelector:@selector(willDisappearPopupMenuController:)]) {
+        [self.delegate willDisappearPopupMenuController:self];
     }
 
     CGAffineTransform t = self.popupMenuBaseView.transform;
     CGSize viewSize = self.popupMenuBaseView.frame.size;
     [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 
-    if (self.animationMode == LKPopupMenuAnimationModeNone) {
+    if (self.animationMode == LKPopupMenuControllerAnimationModeNone) {
         self.popupMenuBaseView.hidden = YES;
 
-    } else if (self.animationMode == LKPopupMenuAnimationModeFade) {
+    } else if (self.animationMode == LKPopupMenuControllerAnimationModeFade) {
         [UIView animateWithDuration:0.2
                          animations:^{
                              self.popupMenuBaseView.alpha = 0.0;
                          }];
 
-    } else if (self.animationMode == LKPopupMenuAnimationModeSlide) {
+    } else if (self.animationMode == LKPopupMenuControllerAnimationModeSlide ||
+               self.animationMode == LKPopupMenuControllerAnimationModeSlideWithBounce) {
         switch (self.arrangementMode) {
-            case LKPopupMenuArrangementModeUp:
+            case LKPopupMenuControllerArrangementModeUp:
                 t = CGAffineTransformTranslate(t, 0, viewSize.height/2.0);
                 t = CGAffineTransformScale(t, 1.0, 0.001);
                 break;
                 
-            case LKPopupMenuArrangementModeDown:
+            case LKPopupMenuControllerArrangementModeDown:
                 t = CGAffineTransformTranslate(t, 0, -viewSize.height/2.0);
                 t = CGAffineTransformScale(t, 1.0, 0.001);
                 break;
                 
-            case LKPopupMenuArrangementModeRight:
+            case LKPopupMenuControllerArrangementModeRight:
                 t = CGAffineTransformTranslate(t, -viewSize.width/2.0, 0);
                 t = CGAffineTransformScale(t, 0.001, 1.0);
                 break;
                 
-            case LKPopupMenuArrangementModeLeft:
+            case LKPopupMenuControllerArrangementModeLeft:
                 t = CGAffineTransformTranslate(t, viewSize.width/2.0, 0);
                 t = CGAffineTransformScale(t, 0.001, 1.0);
                 break;
@@ -1077,15 +1151,15 @@ typedef enum {
             self.popupMenuBaseView.hidden = YES;
         }];
         
-    } else if (self.animationMode == LKPopupMenuAnimationModeOpenClose) {
+    } else if (self.animationMode == LKPopupMenuControllerAnimationModeOpenClose) {
         switch (self.arrangementMode) {
-            case LKPopupMenuArrangementModeUp:
-            case LKPopupMenuArrangementModeDown:
+            case LKPopupMenuControllerArrangementModeUp:
+            case LKPopupMenuControllerArrangementModeDown:
                 t = CGAffineTransformScale(t, 0.001, 1.0);
                 break;
                 
-            case LKPopupMenuArrangementModeRight:
-            case LKPopupMenuArrangementModeLeft:
+            case LKPopupMenuControllerArrangementModeRight:
+            case LKPopupMenuControllerArrangementModeLeft:
                 t = CGAffineTransformScale(t, 1.0, 0.001);
                 break;
         }
@@ -1115,7 +1189,7 @@ typedef enum {
     
     if (self.imageFilenameList && indexPath.row < [self.imageFilenameList count]) {
         NSString* imageFilename = [self.imageFilenameList objectAtIndex:indexPath.row];
-        if ([imageFilename isEqualToString:LKPopupMenuBlankImage]) {
+        if ([imageFilename isEqualToString:LKPopupMenuControllerBlankImage]) {
             UIGraphicsBeginImageContext(CGSizeMake(32, 32));
             cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
@@ -1138,23 +1212,27 @@ typedef enum {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    if (self.selectionMode == LKPopupMenuSelectionModeSingle) {
-        [self.indexSet removeAllIndexes];
-        [self.indexSet addIndex:indexPath.row];
-        if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
-            [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];
-        }
-        [self hide];
-    } else {
+    if (self.multipleSelectionEnabled) {
         if ([self.indexSet containsIndex:indexPath.row]) {
             [self.indexSet removeIndex:indexPath.row];
         } else {
             [self.indexSet addIndex:indexPath.row];        
         }
-        if ([self.delegate respondsToSelector:@selector(didSelectPopupMenu:atIndex:)]) {
-            [self.delegate didSelectPopupMenu:self atIndex:indexPath.row];
+        if ([self.delegate respondsToSelector:@selector(popupMenuController:didSelectRowAtIndex:)]) {
+            [self.delegate popupMenuController:self didSelectRowAtIndex:indexPath.row];
         }
         [self.popupMenuBaseView reloadData];
+    } else {
+        [self.indexSet removeAllIndexes];
+        [self.indexSet addIndex:indexPath.row];
+        if ([self.delegate respondsToSelector:@selector(popupMenuController:didSelectRowAtIndex:)]) {
+            [self.delegate popupMenuController:self didSelectRowAtIndex:indexPath.row];
+        }
+        if (self.autocloseEnabled) {
+            [self dismiss];
+        } else {
+            [self.popupMenuBaseView reloadData];
+        }
     }
 }
 
