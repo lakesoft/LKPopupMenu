@@ -35,6 +35,7 @@
 @property (nonatomic, assign) BOOL separatorEnabled;
 @property (nonatomic, assign) BOOL outlineEnabled;
 @property (nonatomic, assign) BOOL titleHilighted;
+@property (nonatomic, assign) BOOL closeButtonEnabled;
 
 @property (nonatomic, assign) LKPopupMenuControllerSize menuSize;
 @property (nonatomic, assign) LKPopupMenuControllerColor menuColor;
@@ -44,6 +45,7 @@
 - (IBAction)popupToRight:(id)sender;
 - (IBAction)popupToLeft:(id)sender;
 - (IBAction)popupToUp:(id)sender;
+- (IBAction)popupWithoutTriangle:(id)sender;
 - (IBAction)didChangeSizeMode:(id)sender;
 - (IBAction)didChangeSelectionMode:(id)sender;
 - (IBAction)didChangeShadowEnabled:(id)sender;
@@ -58,5 +60,6 @@
 - (IBAction)didChangeTitleHighlighted:(id)sender;
 - (IBAction)didChangeAutoclose:(id)sender;
 - (IBAction)didChangeBounce:(id)sender;
+- (IBAction)didChangeCloseButton:(id)sender;
 
 @end

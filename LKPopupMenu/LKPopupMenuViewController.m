@@ -32,6 +32,7 @@
 @synthesize separatorEnabled;
 @synthesize outlineEnabled;
 @synthesize titleHilighted;
+@synthesize closeButtonEnabled;
 
 - (void)didReceiveMemoryWarning
 {
@@ -64,6 +65,7 @@
     self.separatorEnabled = YES;
     self.outlineEnabled = YES;
     self.titleHilighted = YES;
+    self.closeButtonEnabled = NO;
 }
 
 - (void)dealloc {
@@ -143,7 +145,8 @@
         self.popupMenu.arrangementMode = arrangementMode;
         self.popupMenu.animationMode = self.animationMode;
         self.popupMenu.modalEnabled = self.modalEnabled;
-        
+        self.popupMenu.closeButtonEnabled = self.closeButtonEnabled;
+
         LKPopupMenuAppearance* appearance = [LKPopupMenuAppearance defaultAppearanceWithSize:self.menuSize
                                                                                        color:self.menuColor];
         appearance.shadowEnabled = self.shadowEnabled;
@@ -336,6 +339,13 @@
     self.bounceEnabled = sw.on;
 }
 
+- (IBAction)didChangeCloseButton:(id)sender
+{
+    UISwitch* sw = (UISwitch*)sender;
+    self.closeButtonEnabled = sw.on;
+}
+
+
 - (IBAction)popupToDown:(id)sender {
     CGSize size = ((UIButton*)sender).frame.size;
     CGPoint origin = ((UIButton*)sender).frame.origin;
@@ -358,6 +368,12 @@
     CGPoint location = CGPointMake(origin.x - 2.0,
                                    origin.y + size.height/2.0);
     [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeLeft];
+}
+
+- (IBAction)popupWithoutTriangle:(id)sender
+{
+    CGPoint location = CGPointMake(50, 50);
+    [self _popupAt:location arrangementMode:LKPopupMenuControllerArrangementModeNoTriangle];
 }
 
 @end

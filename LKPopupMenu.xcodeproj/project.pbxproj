@@ -44,6 +44,7 @@
 		4CD6F8F614410CD30056F111 /* LKPopupMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */; };
 		4CD6F90214410D290056F111 /* LKPopupMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenuController.m */; };
 		4CD6F90314410D290056F111 /* LKPopupMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6F90114410D290056F111 /* LKPopupMenuController.m */; };
+		BC612E4317DDA8A900FCA765 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC612E4217DDA8A900FCA765 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,7 @@
 		4CD6F8F514410CD30056F111 /* LKPopupMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuTests.m; sourceTree = "<group>"; };
 		4CD6F90014410D290056F111 /* LKPopupMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKPopupMenuController.h; sourceTree = "<group>"; };
 		4CD6F90114410D290056F111 /* LKPopupMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LKPopupMenuController.m; sourceTree = "<group>"; };
+		BC612E4217DDA8A900FCA765 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 		4CD6F8B614410CD10056F111 = {
 			isa = PBXGroup;
 			children = (
+				BC612E4217DDA8A900FCA765 /* Default-568h@2x.png */,
 				4CD6F8FF14410CF30056F111 /* LKPopupMenu */,
 				4CD6F8CB14410CD20056F111 /* Sample Application */,
 				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,
@@ -275,7 +278,7 @@
 		4CD6F8B814410CD10056F111 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 4CD6F8BB14410CD10056F111 /* Build configuration list for PBXProject "LKPopupMenu" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -301,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CD6F8D014410CD20056F111 /* InfoPlist.strings in Resources */,
+				BC612E4317DDA8A900FCA765 /* Default-568h@2x.png in Resources */,
 				4CD6F8D914410CD20056F111 /* MainWindow.xib in Resources */,
 				4CD6F8DF14410CD20056F111 /* LKPopupMenuViewController.xib in Resources */,
 				4CD6879E144137F90037B126 /* 01.JPG in Resources */,
@@ -422,7 +426,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -438,6 +441,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -446,7 +450,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -466,9 +469,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -478,9 +483,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

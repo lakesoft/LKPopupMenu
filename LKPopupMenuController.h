@@ -33,7 +33,8 @@ typedef enum {
     LKPopupMenuControllerArrangementModeUp = 0,
     LKPopupMenuControllerArrangementModeDown,
     LKPopupMenuControllerArrangementModeLeft,
-    LKPopupMenuControllerArrangementModeRight
+    LKPopupMenuControllerArrangementModeRight,
+    LKPopupMenuControllerArrangementModeNoTriangle
     
 } LKPopupMenuControllerArrangementMode;
 
@@ -82,12 +83,25 @@ typedef enum {
 - (void)willAppearPopupMenuController:(LKPopupMenuController*)popupMenuController;
 
 /**
+ Notifies the popup menu that its view is about to be become visible.
+ 
+ @param popupMenuController The popup menu object requesting this information.
+ */
+- (void)didAppearPopupMenuController:(LKPopupMenuController*)popupMenuController;
+
+/**
  Notifies the popupMenuController that its view is about to be dismissed.
  
  @param popupMenuController The popup menu object requesting this information.
  */
 - (void)willDisappearPopupMenuController:(LKPopupMenuController*)popupMenuController;
 
+/**
+ Notifies the popupMenuController that its view is about to be dismissed.
+ 
+ @param popupMenuController The popup menu object requesting this information.
+ */
+- (void)didDisappearPopupMenuController:(LKPopupMenuController*)popupMenuController;
 
 /**
  @name Managing Selections
@@ -100,6 +114,16 @@ typedef enum {
  @param index An index locating the new selected row in popup menu.
  */
 - (void)popupMenuController:(LKPopupMenuController*)popupMenuController didSelectRowAtIndex:(NSUInteger)index;
+
+/**
+ *
+ */
+- (void)popupMenuController:(LKPopupMenuController *)popupMenuController didTapButtonAtIndex:(NSUInteger)index;
+
+/**
+ *
+ */
+- (void)didCancelPopupMenuController:(LKPopupMenuController *)popupMenuController;
 
 @end
 
@@ -146,6 +170,9 @@ typedef enum {
 /** The color of the outline for the menu. */
 @property (nonatomic, retain) UIColor* outlineColor;
 
+/** The color of the outline for the menu. */
+@property (nonatomic, retain) UIColor* closeButtonColor;
+
 /** The style of the scroll indicators.
  
  The default style is UIScrollViewIndicatorStyleDefault. See “Scroll Indicator Style” for descriptions of these constants. 
@@ -156,6 +183,9 @@ typedef enum {
 /**
  @name Configuring Menu Sizes
  */
+
+/** TODO */
+@property (nonatomic, assign) LKPopupMenuControllerSize menuSize;
 
 /** The height of menu title. */
 @property (nonatomic, assign) CGFloat titleHeight;
@@ -194,7 +224,6 @@ typedef enum {
 
 /**TODO */
 @property (nonatomic, assign) BOOL titleHighlighted;
-
 
 
 /**
@@ -257,6 +286,11 @@ typedef enum {
 - (void)presentPopupMenuFromLocation:(CGPoint)location;
 
 /**
+ Cancel popup menu (call delegate)
+ */
+- (void)cancel;
+
+/**
  Dismisses the receiver.
  */
 - (void)dismiss;
@@ -271,6 +305,12 @@ typedef enum {
 
 /** TODO */
 @property (nonatomic, retain) NSArray* imageFilenameList;
+
+/** TODO */
+@property (nonatomic, retain) NSSet* disableIndexSet;
+
+/** TODO */
+@property (nonatomic, retain) NSString* buttonImageFilename;
 
 /** The string that appears in the receiver's title bar.
  
@@ -317,6 +357,16 @@ NOTE: Though autocloseEnabled is YES it will not be closed automaticaly when mul
 /** A Boolean value that determines whether using modal mode. */
 @property (nonatomic, assign) BOOL modalEnabled;
 
+/**TODO */
+@property (nonatomic, assign) BOOL closeButtonEnabled;
+
+/** A Boolean value that determines whether th button position. YES=left/NO=right */
+@property (nonatomic, assign) BOOL closeButtonLeftAlignment;
+
+/**TODO */
+@property (nonatomic, assign) BOOL darkBackgroundEnabled;
+
+
 /** The direction TODO*
  
  The selection mode. See LKPopupMenuControllerArrangementMode for possible values.
@@ -348,5 +398,12 @@ NOTE: Though autocloseEnabled is YES it will not be closed automaticaly when mul
 /**TODO */
 @property (nonatomic, assign, readonly) BOOL popupmenuVisible;
 
+
+/**
+ @name Panel
+ */
+
+/**TODO */
+@property (nonatomic, assign, readonly) UIView* panelView;
 
 @end
