@@ -142,36 +142,36 @@ typedef enum {
  */
 
 /** The menu’s background color. */
-@property (nonatomic, retain) UIColor* menuBackgroundColor;
+@property (nonatomic, strong) UIColor* menuBackgroundColor;
 
 /** The color of the menu. */
-@property (nonatomic, retain) UIColor* menuTextColor;
+@property (nonatomic, strong) UIColor* menuTextColor;
 
 /** The highlighted color of the menu. */
-@property (nonatomic, retain) UIColor* menuHilightedColor;
+@property (nonatomic, strong) UIColor* menuHilightedColor;
 
 /** The title's background color. */
-@property (nonatomic, retain) UIColor* titleBackgroundColor;
+@property (nonatomic, strong) UIColor* titleBackgroundColor;
 
 /** The color of the title. */
-@property (nonatomic, retain) UIColor* titleTextColor;
+@property (nonatomic, strong) UIColor* titleTextColor;
 
 /** The color of the shadow for the title.
  
  The color is used when titleHighlighted is YES. */
-@property (nonatomic, retain) UIColor* titleTextShadowColor;
+@property (nonatomic, strong) UIColor* titleTextShadowColor;
 
 /** The color of the checkmark. */
-@property (nonatomic, retain) UIColor* checkMarkColor;
+@property (nonatomic, strong) UIColor* checkMarkColor;
 
 /** The color of the separator. */
-@property (nonatomic, retain) UIColor* separatorColor;
+@property (nonatomic, strong) UIColor* separatorColor;
 
 /** The color of the outline for the menu. */
-@property (nonatomic, retain) UIColor* outlineColor;
+@property (nonatomic, strong) UIColor* outlineColor;
 
 /** The color of the outline for the menu. */
-@property (nonatomic, retain) UIColor* closeButtonColor;
+@property (nonatomic, strong) UIColor* closeButtonColor;
 
 /** The style of the scroll indicators.
  
@@ -301,16 +301,16 @@ typedef enum {
  */
 
 /**TODO */
-@property (nonatomic, retain) NSArray* textList;
+@property (nonatomic, strong) NSArray* textList;
 
 /** TODO */
-@property (nonatomic, retain) NSArray* imageFilenameList;
+@property (nonatomic, strong) NSArray* imageFilenameList;
 
 /** TODO */
-@property (nonatomic, retain) NSSet* disableIndexSet;
+@property (nonatomic, strong) NSSet* disableIndexSet;
 
 /** TODO */
-@property (nonatomic, retain) NSString* buttonImageFilename;
+@property (nonatomic, strong) NSString* buttonImageFilename;
 
 /** The string that appears in the receiver's title bar.
  
@@ -322,7 +322,7 @@ If this string is nil or empty, then the title bar will disappear. */
  @name Managing Selections
  */
 /** TODO */
-@property (nonatomic, retain) NSIndexSet* selectedIndexSet;
+@property (nonatomic, strong) NSIndexSet* selectedIndexSet;
 
 /**
  @name Managing the Delegate
@@ -332,7 +332,7 @@ If this string is nil or empty, then the title bar will disappear. */
  
  The delegate must adopt the LKPopupMenuControllerDelegate protocol. The delegate is not retained.
  */
-@property (nonatomic, assign) id<LKPopupMenuControllerDelegate> delegate;
+@property (nonatomic, weak) id<LKPopupMenuControllerDelegate> delegate;
 
 
 /**
@@ -385,7 +385,7 @@ NOTE: Though autocloseEnabled is YES it will not be closed automaticaly when mul
  */
 
 /** The appearance of menu */
-@property (nonatomic, retain) LKPopupMenuAppearance* appearance;
+@property (nonatomic, strong) LKPopupMenuAppearance* appearance;
 
 
 /**
@@ -393,7 +393,7 @@ NOTE: Though autocloseEnabled is YES it will not be closed automaticaly when mul
  */
 
 /**TODO */
-@property (nonatomic, assign, readonly) UIView* parentView;
+@property (nonatomic, weak, readonly) UIView* parentView;
 
 /**TODO */
 @property (nonatomic, assign, readonly) BOOL popupmenuVisible;
@@ -404,6 +404,6 @@ NOTE: Though autocloseEnabled is YES it will not be closed automaticaly when mul
  */
 
 /**TODO */
-@property (nonatomic, assign, readonly) UIView* panelView;
+@property (nonatomic, weak, readonly) UIView* panelView;
 
 @end

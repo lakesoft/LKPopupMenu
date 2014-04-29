@@ -30,38 +30,10 @@
 //------------------------------------------------------------------------------
 @implementation LKPopupMenuAppearance
 //------------------------------------------------------------------------------
-// colors
-@synthesize menuBackgroundColor;
-@synthesize menuTextColor;
-@synthesize titleBackgroundColor;
-@synthesize titleTextColor;
-@synthesize titleTextShadowColor;
-@synthesize menuHilightedColor;
-@synthesize checkMarkColor;
-@synthesize separatorColor;
-@synthesize outlineColor;
-@synthesize closeButtonColor;
-@synthesize indicatorStyle;
-
-// size
-@synthesize menuSize;
-@synthesize titleHeight;
-@synthesize cellHeight;
-@synthesize fontSize;
-@synthesize listWidth, listHeight;
-@synthesize outlineWith;
-
-// appearance
-@synthesize shadowEnabled;
-@synthesize triangleEnabled;
-@synthesize separatorEnabled;
-@synthesize outlineEnabled;
-@synthesize titleHighlighted;
-
 
 + (LKPopupMenuAppearance*)defaultAppearanceWithSize:(LKPopupMenuControllerSize)menuSize color:(LKPopupMenuControllerColor)menuColor
 {
-    LKPopupMenuAppearance* appearance = [[[LKPopupMenuAppearance alloc] init] autorelease];
+    LKPopupMenuAppearance* appearance = [[LKPopupMenuAppearance alloc] init];
 
     // setup sizes
     switch (menuSize) {
@@ -162,21 +134,6 @@
     return [self defaultAppearanceWithSize:menuSize color:LKPopupMenuControllerColorDefault];
 }
 
-- (void)dealloc
-{
-    self.menuBackgroundColor = nil;
-    self.menuTextColor = nil;
-    self.menuHilightedColor = nil;
-    self.titleBackgroundColor = nil;
-    self.titleTextColor = nil;
-    self.titleTextShadowColor = nil;
-    self.checkMarkColor = nil;
-    self.separatorColor = nil;
-    self.outlineColor = nil;
-    self.closeButtonColor = nil;
-    [super dealloc];
-}
-            
 @end
 
 
@@ -186,11 +143,11 @@
 @interface LKPopupMenuController() <UITableViewDelegate, UITableViewDataSource>
 //==============================================================================
 
-@property (nonatomic, assign) UIView* parentView;
-@property (nonatomic, retain) LKPopupMenuView* popupMenuBaseView;
+@property (nonatomic, weak  ) UIView* parentView;
+@property (nonatomic, strong) LKPopupMenuView* popupMenuBaseView;
 @property (nonatomic, assign) BOOL popupmenuVisible;
-@property (nonatomic, retain) LKPopupBackgroundView* backgroundView;
-@property (nonatomic, retain) NSMutableIndexSet* indexSet;
+@property (nonatomic, strong) LKPopupBackgroundView* backgroundView;
+@property (nonatomic, strong) NSMutableIndexSet* indexSet;
 
 @end
 
@@ -199,10 +156,9 @@
 //------------------------------------------------------------------------------
 @end
 @interface LKPopupBackgroundView()
-@property (nonatomic, assign) LKPopupMenuController* popupMenu;
+@property (nonatomic, weak) LKPopupMenuController* popupMenu;
 @end
 @implementation LKPopupBackgroundView
-@synthesize popupMenu = popupMenu_;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.popupMenu cancel];
@@ -225,8 +181,8 @@
 //==============================================================================
 @interface LKPopupMenuTitleView : UIView
 //==============================================================================
-@property (nonatomic, assign) CATextLayer* textLayer;
-@property (nonatomic, assign) CAGradientLayer* gradientLayer;
+@property (nonatomic, weak) CATextLayer* textLayer;
+@property (nonatomic, weak) CAGradientLayer* gradientLayer;
 - (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenuController*)popupMenu;
 @end
 
@@ -238,9 +194,6 @@
 #define LK_POPUP_MENU_BUTTON_SIZE   30.0
 #define LK_POPUP_MENU_BUTTON_PADDING 9.0
 #define LK_POPUP_MENU_BUTTON_LINE_WIDTH 3.5
-
-@synthesize textLayer = textLayer_;
-@synthesize gradientLayer = gradientLayer_;
 
 - (id)initWithFrame:(CGRect)frame popupMenu:(LKPopupMenuController*)popupMenu
 {
@@ -356,9 +309,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [super dealloc];
-}
 @end
 
 
@@ -379,13 +329,13 @@ typedef enum {
     LKPopupMenuViewTypeFrame
 } LKPopupMenuViewType;
 
-@property (nonatomic, assign) LKPopupMenuController* popupMenu;
-@property (nonatomic, assign) UITableView* tableView;
+@property (nonatomic, weak  ) LKPopupMenuController* popupMenu;
+@property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, assign) CGRect tableFrame;
 @property (nonatomic, assign) CGFloat shadowOffset;
 @property (nonatomic, assign) CGSize triangleSize;
 @property (nonatomic, assign) CGFloat titleHeight;
-@property (nonatomic, retain) UIBezierPath* path;
+@property (nonatomic, strong) UIBezierPath* path;
 @property (nonatomic, assign) LKPopupMenuViewType type;
 
 - (id)initAsBaseWithPopupMenu:(LKPopupMenuController*)popupMenu location:(CGPoint)location title:(NSString*)title;
@@ -399,15 +349,6 @@ typedef enum {
 //------------------------------------------------------------------------------
 @implementation LKPopupMenuView
 //------------------------------------------------------------------------------
-@synthesize popupMenu = popupMenu_;
-@synthesize tableView = tableView_;
-@synthesize tableFrame = tableFrame_;
-@synthesize shadowOffset = shadowOffset_;
-@synthesize triangleSize = triangleSize_;
-@synthesize titleHeight = titleHeight_;
-@synthesize path = path_;
-@synthesize type = type_;
-
 - (void)setupPathAtLocation:(CGPoint)location
 {
     UIBezierPath* path = [UIBezierPath bezierPath];
@@ -713,8 +654,8 @@ typedef enum {
 
         if (type == LKPopupMenuViewTypeBase) {
             // setup table        
-            self.tableView = [[[UITableView alloc] initWithFrame:self.tableFrame
-                                                           style:UITableViewStylePlain] autorelease];
+            self.tableView = [[UITableView alloc] initWithFrame:self.tableFrame
+                                                          style:UITableViewStylePlain];
             self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             self.tableView.showsVerticalScrollIndicator = YES;
             self.tableView.indicatorStyle = appearance.indicatorStyle;
@@ -728,9 +669,9 @@ typedef enum {
             // setup header
             if (title && [[title stringByTrimmingCharactersInSet:
                            [NSCharacterSet whitespaceCharacterSet]] length] > 0) {
-                LKPopupMenuTitleView* view = [[[LKPopupMenuTitleView alloc] initWithFrame:
-                                 CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)
-                                               popupMenu:popupMenu] autorelease];
+                LKPopupMenuTitleView* view = [[LKPopupMenuTitleView alloc] initWithFrame:
+                                              CGRectMake(0, 0, self.tableView.frame.size.width, self.titleHeight)
+                                                                               popupMenu:popupMenu];
                 self.tableView.tableHeaderView = view;
             }
 
@@ -766,13 +707,9 @@ typedef enum {
 }
 
 - (void)dealloc {
-    self.popupMenu = nil;
     if (self.tableView) {
         [self.tableView removeFromSuperview];
     }
-    self.tableView = nil;
-    self.path = nil;
-    [super dealloc];
 }
 
 - (void)reloadData
@@ -805,7 +742,7 @@ typedef enum {
 //------------------------------------------------------------------------------
 @interface LKPopupMenuCheckMarkView : UIView
 //------------------------------------------------------------------------------
-@property (nonatomic, retain) UIColor* color;
+@property (nonatomic, strong) UIColor* color;
 + (LKPopupMenuCheckMarkView*)checkMarkViewAtPoint:(CGPoint)p color:(UIColor*)color;
 @end
 
@@ -814,13 +751,10 @@ typedef enum {
 //------------------------------------------------------------------------------
 #define LK_POPUP_MENU_CHECK_MARK_SIZE   16
 
-@synthesize color = color_;
-
 + (LKPopupMenuCheckMarkView*)checkMarkViewAtPoint:(CGPoint)p color:(UIColor*)color
 {
     CGRect frame = CGRectMake(p.x, p.y, LK_POPUP_MENU_CHECK_MARK_SIZE, LK_POPUP_MENU_CHECK_MARK_SIZE);
-    LKPopupMenuCheckMarkView* view = [[[LKPopupMenuCheckMarkView alloc]
-                                       initWithFrame:frame] autorelease];
+    LKPopupMenuCheckMarkView* view = [[LKPopupMenuCheckMarkView alloc] initWithFrame:frame];
     view.color = color;
     view.backgroundColor = [UIColor clearColor];
     return view;
@@ -846,11 +780,6 @@ typedef enum {
     [path stroke];
 }
 
-- (void)dealloc {
-    self.color = nil;
-    [super dealloc];
-}
-
 @end
 
 
@@ -858,23 +787,19 @@ typedef enum {
 @interface LKPopupMenuCell : UITableViewCell
 //------------------------------------------------------------------------------
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenuController*)popupMenu;
-@property (nonatomic, retain) LKPopupMenuCheckMarkView* checkMarkView;
-@property (nonatomic, assign) LKPopupMenuAppearance* appearance;
+@property (nonatomic, strong) LKPopupMenuCheckMarkView* checkMarkView;
+@property (nonatomic, weak  ) LKPopupMenuAppearance* appearance;
 @property (nonatomic, assign) BOOL separatorEnabled;
 @end
 
 @implementation LKPopupMenuCell
-@synthesize checkMarkView = checkMarkView_;
-@synthesize appearance = appearance_;
-@synthesize separatorEnabled = separatorEnabled_;
-
 + (LKPopupMenuCell*)cellForTableView:(UITableView*)tableView popupMenu:(LKPopupMenuController*)popupMenu
 {
     static NSString *cellIdentifier = @"LKPopupMenuCell";
     
     LKPopupMenuCell *cell = (LKPopupMenuCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[[LKPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[LKPopupMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.appearance = popupMenu.appearance;
         cell.backgroundColor = UIColor.clearColor;
         cell.textLabel.font = [UIFont systemFontOfSize:cell.appearance.fontSize];
@@ -934,46 +859,11 @@ typedef enum {
     }    
 }
 
-- (void)dealloc {
-    self.checkMarkView = nil;
-    self.appearance = nil;
-    [super dealloc];
-}
 @end
 
 //------------------------------------------------------------------------------
 @implementation LKPopupMenuController
 //------------------------------------------------------------------------------
-@synthesize indexSet = indexSet_;
-
-@synthesize textList = textList_;
-@synthesize imageFilenameList = imageFilenameList_;
-@synthesize disableIndexSet = disableIndexSet_;
-@synthesize buttonImageFilename = buttonImageFilename_;
-
-@synthesize delegate = delegate_;
-@synthesize multipleSelectionEnabled = multipleSelectionEnabled_;
-@synthesize arrangementMode = arrangementMode_;
-@synthesize animationMode = animationMode_;
-@synthesize modalEnabled = modalEnabled_;
-
-@synthesize parentView = parentView_;
-@synthesize title = title_;
-@synthesize popupmenuVisible = shown_;
-
-@synthesize autoresizeEnabled = autoresizeEnabled_;
-@synthesize autocloseEnabled = autocloseEnabled_;
-@synthesize bounceEnabled = bounceEnabled_;
-@synthesize closeButtonEnabled = closeButtonEnabled_;
-@synthesize closeButtonLeftAlignment = closeButtonLeftAlignment_;
-@synthesize darkBackgroundEnabled = darkBackgroundEnabled_;
-
-@synthesize appearance = appearance_;
-
-@synthesize popupMenuBaseView = popupMenuBaseView_;
-@synthesize backgroundView = backgroundView_;
-
-
 #pragma mark -
 #pragma mark Basics
 
@@ -998,29 +888,12 @@ typedef enum {
 }
 
 - (void)dealloc {
-    self.textList = nil;
-    self.imageFilenameList = nil;
-    self.disableIndexSet = nil;
-    self.buttonImageFilename = nil;
-
-    self.delegate = nil;
     if (self.popupMenuBaseView) {
         [self.popupMenuBaseView removeFromSuperview];
     }
-    self.popupMenuBaseView = nil;
-    self.parentView = nil;
-    self.title = nil;
-
-    self.indexSet = nil;
-
-    self.appearance = nil;
-    
     if (self.backgroundView) {
         [self.backgroundView removeFromSuperview];
     }
-    self.backgroundView = nil;
-    
-    [super dealloc];
 }
 
 #pragma mark -
@@ -1041,7 +914,7 @@ typedef enum {
 #pragma mark Properties
 - (void)setSelectedIndexSet:(NSIndexSet *)selectedIndexSet
 {
-    self.indexSet = [[[NSMutableIndexSet alloc] initWithIndexSet:selectedIndexSet] autorelease];
+    self.indexSet = [[NSMutableIndexSet alloc] initWithIndexSet:selectedIndexSet];
 }
 
 - (NSIndexSet*)selectedIndexSet
@@ -1053,14 +926,13 @@ typedef enum {
 #pragma mark API
 + (LKPopupMenuController*)popupMenuControllerOnView:(UIView*)parentView
 {
-    return [[[self alloc] initWithView:parentView
-                            appearance:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuControllerSizeMedium]] autorelease];
+    return [[self alloc] initWithView:parentView
+                            appearance:[LKPopupMenuAppearance defaultAppearanceWithSize:LKPopupMenuControllerSizeMedium]];
 }
 
 + (LKPopupMenuController*)popupMenuControllerOnView:(UIView*)parentView appearacne:(LKPopupMenuAppearance*)appearance
 {
-    return [[[self alloc] initWithView:parentView
-                            appearance:appearance] autorelease];
+    return [[self alloc] initWithView:parentView appearance:appearance];
 }
 
 - (void)presentPopupMenuFromLocation:(CGPoint)location
@@ -1078,11 +950,11 @@ typedef enum {
     
     // create new popup mewnu view
     NSString* title = self.title ? [@"  " stringByAppendingString:self.title] : nil;
-    self.popupMenuBaseView = [[[LKPopupMenuView alloc] initAsBaseWithPopupMenu:self
-                                                                      location:location
-                                                                         title:title] autorelease];
+    self.popupMenuBaseView = [[LKPopupMenuView alloc] initAsBaseWithPopupMenu:self
+                                                                     location:location
+                                                                        title:title];
     if (self.modalEnabled) {
-        self.backgroundView = [[[LKPopupBackgroundView alloc] initWithFrame:self.parentView.bounds popupMenuController:self] autorelease];
+        self.backgroundView = [[LKPopupBackgroundView alloc] initWithFrame:self.parentView.bounds popupMenuController:self];
         self.backgroundView.alpha = 0.0;
         [self.parentView addSubview:self.backgroundView];
         [UIView animateWithDuration:0.2
@@ -1096,9 +968,9 @@ typedef enum {
     [self.popupMenuBaseView setupPathAtLocation:p];
     
     if (self.appearance.outlineEnabled) {
-        LKPopupMenuView* frameView = [[[LKPopupMenuView alloc] initAsFrameWithPopupMenu:self
-                                                                               location:location
-                                                                                  title:title] autorelease];
+        LKPopupMenuView* frameView = [[LKPopupMenuView alloc] initAsFrameWithPopupMenu:self
+                                                                              location:location
+                                                                                 title:title];
         [self.popupMenuBaseView addSubview:frameView];
         [frameView setupPathAtLocation:p];
     }

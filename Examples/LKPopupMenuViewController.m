@@ -68,16 +68,7 @@
     self.closeButtonEnabled = NO;
 }
 
-- (void)dealloc {
-    self.popupMenu = nil;
-    self.sizeMenu = nil;
-    self.colorMenu = nil;
-    self.animationMenu = nil;
-    self.imageMenu = nil;
-    [popupButton release];
-    [title release];
-    [super dealloc];
-}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];

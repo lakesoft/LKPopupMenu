@@ -12,8 +12,8 @@
 
 @interface LKPopupMenuAppDelegate : NSObject <UIApplicationDelegate>
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, strong) IBOutlet UIWindow *window;
 
-@property (nonatomic, retain) IBOutlet LKPopupMenuViewController *viewController;
+@property (nonatomic, strong) IBOutlet LKPopupMenuViewController *viewController;
 
 @end

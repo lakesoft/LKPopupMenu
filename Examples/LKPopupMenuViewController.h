@@ -17,13 +17,13 @@
 
 @property (nonatomic, retain) NSArray* list;
 
-@property (nonatomic, retain) LKPopupMenuController* popupMenu;
-@property (nonatomic, retain) LKPopupMenuController* sizeMenu;
-@property (nonatomic, retain) LKPopupMenuController* colorMenu;
-@property (nonatomic, retain) LKPopupMenuController* animationMenu;
-@property (nonatomic, retain) LKPopupMenuController* imageMenu;
+@property (nonatomic, strong) LKPopupMenuController* popupMenu;
+@property (nonatomic, strong) LKPopupMenuController* sizeMenu;
+@property (nonatomic, strong) LKPopupMenuController* colorMenu;
+@property (nonatomic, strong) LKPopupMenuController* animationMenu;
+@property (nonatomic, strong) LKPopupMenuController* imageMenu;
 
-@property (nonatomic, retain) IBOutlet UITextField *menuTitle;
+@property (nonatomic, strong) IBOutlet UITextField *menuTitle;
 
 @property (nonatomic, assign) BOOL autoresizeEnabled;
 @property (nonatomic, assign) BOOL autocloseEnabled;

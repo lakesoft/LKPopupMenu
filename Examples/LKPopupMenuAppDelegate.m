@@ -12,9 +12,6 @@
 
 @implementation LKPopupMenuAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -61,13 +58,6 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-}
-
-- (void)dealloc
-{
-    [_window release];
-    [_viewController release];
-    [super dealloc];
 }
 
 @end

@@ -132,8 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				BC612E4217DDA8A900FCA765 /* Default-568h@2x.png */,
-				4CD6F8FF14410CF30056F111 /* LKPopupMenu */,
-				4CD6F8CB14410CD20056F111 /* Sample Application */,
+				4CD6F8FF14410CF30056F111 /* Classes */,
+				4CD6F8CB14410CD20056F111 /* Examples */,
 				4CD6F8ED14410CD20056F111 /* LKPopupMenuTests */,
 				4CD6F8C414410CD20056F111 /* Frameworks */,
 				4CD6F8C214410CD20056F111 /* Products */,
@@ -161,7 +161,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4CD6F8CB14410CD20056F111 /* Sample Application */ = {
+		4CD6F8CB14410CD20056F111 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
 				4CD6F8D414410CD20056F111 /* LKPopupMenuAppDelegate.h */,
@@ -172,8 +172,7 @@
 				4CD6F8DD14410CD20056F111 /* LKPopupMenuViewController.xib */,
 				4CD6F8CC14410CD20056F111 /* Supporting Files */,
 			);
-			name = "Sample Application";
-			path = LKPopupMenu;
+			path = Examples;
 			sourceTree = "<group>";
 		};
 		4CD6F8CC14410CD20056F111 /* Supporting Files */ = {
@@ -224,13 +223,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4CD6F8FF14410CF30056F111 /* LKPopupMenu */ = {
+		4CD6F8FF14410CF30056F111 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				4CD6F90014410D290056F111 /* LKPopupMenuController.h */,
 				4CD6F90114410D290056F111 /* LKPopupMenuController.m */,
 			);
-			name = LKPopupMenu;
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +277,7 @@
 		4CD6F8B814410CD10056F111 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastTestingUpgradeCheck = 0510;
 				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 4CD6F8BB14410CD10056F111 /* Build configuration list for PBXProject "LKPopupMenu" */;
@@ -426,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -450,6 +451,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -468,9 +470,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/LKPopupMenu-Prefix.pch";
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				INFOPLIST_FILE = "Examples/LKPopupMenu-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -482,9 +484,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "LKPopupMenu/LKPopupMenu-Prefix.pch";
+				GCC_PREFIX_HEADER = "Examples/LKPopupMenu-Prefix.pch";
 				GCC_VERSION = "";
-				INFOPLIST_FILE = "LKPopupMenu/LKPopupMenu-Info.plist";
+				INFOPLIST_FILE = "Examples/LKPopupMenu-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
